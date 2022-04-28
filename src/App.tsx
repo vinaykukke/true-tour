@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "./App.scss";
 
 function App() {
@@ -11,18 +11,27 @@ function App() {
     1,
     10000
   );
+  camera.position.z = 5;
 
   const renderer = new THREE.WebGLRenderer();
-  // const controls = new OrbitControls(camera, renderer.domElement);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
+  const controls = new OrbitControls(camera, renderer.domElement);
+  // controls.addEventListener("change", render); // call this only in static scenes (i.e., if there is no animation loop)
+
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = false;
+  controls.maxPolarAngle = Math.PI / 2;
+
   const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const material = new THREE.MeshBasicMaterial({
+    wireframe: true,
+    color: 0x00ff00,
+  });
   const cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
-
-  camera.position.z = 5;
 
   function animate() {
     requestAnimationFrame(animate);
