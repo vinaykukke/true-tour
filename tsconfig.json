@@ -14,7 +14,8 @@
     "noUnusedParameters": true,
     "paths": {
       "components/*": ["src/components/*"],
-      "three-js/*": ["src/three-js/*"]
+      "three-js/*": ["src/three-js/*"],
+      "data/*": ["src/data/*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,

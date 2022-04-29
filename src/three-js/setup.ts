@@ -4,12 +4,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 const setup = () => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
-    45,
+    90,
     window.innerWidth / window.innerHeight,
     1,
     10000
   );
-  camera.position.z = 5;
+
+  camera.position.set(0, 0, 0.1);
 
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -25,9 +26,9 @@ const setup = () => {
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.maxPolarAngle = Math.PI / 2;
-  controls.autoRotate = true;
-  controls.rotateSpeed = -0.5;
+  controls.minDistance = 10;
+  controls.maxDistance = 1500;
+  controls.maxPolarAngle = Math.PI;
 
   return { scene, camera, renderer, controls };
 };

@@ -1,22 +1,28 @@
 import { Suspense } from "react";
 import * as THREE from "three";
 import setup from "./three-js/setup";
+// import store from "./data/store";
 import "./App.scss";
 
 function App() {
   /** Initial setup */
   const { scene, camera, renderer, controls } = setup();
 
-  /** Materials */
-  const geometry = new THREE.BoxGeometry();
+  /** Texture */
+  const loader = new THREE.TextureLoader();
+  const texture = loader.load("/pano_inside.jpg");
+
+  /** Pano Dome */
+  const geometry = new THREE.SphereBufferGeometry(2000, 100, 50);
   const material = new THREE.MeshBasicMaterial({
-    wireframe: true,
-    color: 0x00ff00,
+    map: texture,
+    color: 0xffff00,
+    side: THREE.BackSide,
   });
-  const cube = new THREE.Mesh(geometry, material);
+  const pano = new THREE.Mesh(geometry, material);
 
   /** Add to scene */
-  scene.add(cube);
+  scene.add(pano);
 
   function animate() {
     requestAnimationFrame(animate);
