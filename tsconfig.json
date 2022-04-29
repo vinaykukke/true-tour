@@ -15,6 +15,7 @@
     "paths": {
       "components/*": ["src/components/*"],
       "three-js/*": ["src/three-js/*"],
+      "mesh/*": ["src/mesh/*"],
       "data/*": ["src/data/*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
