@@ -6,10 +6,10 @@ const getPano = () => {
   const texture = loader.load("/pano_inside.jpg");
 
   /** Pano Dome */
-  const geometry = new THREE.SphereBufferGeometry(2000, 100, 50);
+  const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
   const material = new THREE.MeshBasicMaterial({
     map: texture,
-    color: 0xffff00,
+    color: 0xffffff,
     side: THREE.BackSide,
   });
 
