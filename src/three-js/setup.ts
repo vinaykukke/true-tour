@@ -1,15 +1,16 @@
 import { MutableRefObject } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import TOrbitContols from "./extensions/TOrbitContols";
+import { DEFAULT_DATA } from "../data";
 
 const setup = (mountPoint: MutableRefObject<HTMLElement>) => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
-    65,
+    DEFAULT_DATA.camera_fov,
     window.innerWidth / window.innerHeight,
-    1,
-    500
+    DEFAULT_DATA.camera_near,
+    DEFAULT_DATA.camera_far
   );
 
   camera.position.set(0, 0, 0.1);
@@ -28,7 +29,7 @@ const setup = (mountPoint: MutableRefObject<HTMLElement>) => {
   /** Append the label element to the three-js mount point */
   mountPoint.current.appendChild(labelRenderer.domElement);
 
-  const controls = new OrbitControls(camera, labelRenderer.domElement);
+  const controls = new TOrbitContols(camera, labelRenderer.domElement);
 
   /**
    * @param [enableDamping = true] is used to give a sense of weight to the controls.
@@ -38,8 +39,7 @@ const setup = (mountPoint: MutableRefObject<HTMLElement>) => {
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.minDistance = 10;
-  controls.maxDistance = 50;
+  controls.lock();
   controls.maxPolarAngle = Math.PI;
   controls.target.set(0, 0, 0);
 
