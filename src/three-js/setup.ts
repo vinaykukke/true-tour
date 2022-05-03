@@ -1,9 +1,9 @@
 import { MutableRefObject } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 
-const setup = (mountPoint: MutableRefObject<any>) => {
+const setup = (mountPoint: MutableRefObject<HTMLElement>) => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     65,
@@ -16,6 +16,9 @@ const setup = (mountPoint: MutableRefObject<any>) => {
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  /** Mount Point for Three-js */
+  mountPoint.current.appendChild(renderer.domElement);
 
   const labelRenderer = new CSS2DRenderer();
   labelRenderer.setSize(window.innerWidth, window.innerHeight);

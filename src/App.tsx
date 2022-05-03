@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import setup from "./three-js/setup";
-// import store from "./data/store";
+// import store from "data/store";
 import getPano from "./mesh/geometry/pano";
 import getHotspot from "./mesh/geometry/hotspot";
 import "./App.scss";
@@ -14,8 +14,6 @@ function App() {
     /** Initial setup */
     const { scene, camera, renderer, controls, labelRenderer } =
       setup(threejsMountPoint);
-    /** Mount Point for Three-js */
-    threejsMountPoint.current.appendChild(renderer.domElement);
 
     /** Get all the mesh */
     const pano = getPano();
