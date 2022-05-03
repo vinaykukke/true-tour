@@ -1,9 +1,8 @@
 import { Suspense, useEffect, useRef } from "react";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import setup from "./three-js/setup";
 // import store from "data/store";
 import getPano from "./mesh/geometry/pano";
-import getHotspot from "./mesh/geometry/hotspot";
+import Hotspot from "./mesh/geometry/hotspot";
 import "./App.scss";
 
 function App() {
@@ -17,18 +16,12 @@ function App() {
 
     /** Get all the mesh */
     const pano = getPano();
-    const hotspot = getHotspot();
-
-    /** Crate label object */
-    const label = new CSS2DObject(labelRef.current);
-    labelRef.current.textContent = "outside";
-    label.position.set(0, 0, 0);
-
-    /** Adding the label to the Hotspot mesh */
-    hotspot.add(label);
+    const hotspot = new Hotspot(60, 0, -195);
+    hotspot.addLabel(labelRef, "outside");
+    const hotspotMesh = hotspot.getMesh();
 
     /** Add to scene */
-    scene.add(pano, hotspot);
+    scene.add(pano, hotspotMesh);
 
     function animate() {
       /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
