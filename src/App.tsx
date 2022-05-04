@@ -22,6 +22,7 @@ function App() {
     const groupOne = new THREE.Group();
     const groupTwo = new THREE.Group();
     const raycaster = new THREE.Raycaster();
+    const pos = new THREE.Vector3();
     const { scene, camera, renderer, controls, labelRenderer } =
       setup(threejsMountPoint);
 
@@ -44,6 +45,10 @@ function App() {
       z: -195,
     });
 
+    /** Getting the position of the object in world space */
+    pano2.updateWorldMatrix(true, false);
+    pano2.getWorldPosition(pos);
+
     /** Making a group */
     groupOne.add(pano, hotspot);
     groupTwo.add(pano2);
@@ -61,8 +66,8 @@ function App() {
         intersects.forEach((item) => {
           if (item.object.uuid === hotspot.uuid) {
             controls.unlock();
-            camera.position.set(0, 0, 4 * DEFAULT_DATA.pano_radius + 0.1);
-            controls.target.set(0, 0, 4 * DEFAULT_DATA.pano_radius);
+            camera.position.set(pos.x, pos.y, pos.z + 0.1);
+            controls.target.set(pos.x, pos.y, pos.z);
             controls.lock();
           }
         });
