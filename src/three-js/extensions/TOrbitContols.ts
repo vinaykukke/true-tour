@@ -20,6 +20,7 @@ class TOrbitContols extends OrbitControls {
     this.dampingFactor = 0.05;
     this.screenSpacePanning = false;
     this.maxPolarAngle = Math.PI;
+    this.rotateSpeed = -0.5;
     this.target.set(0, 0, 0);
     this.lock();
   }
