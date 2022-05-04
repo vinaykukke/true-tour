@@ -83,7 +83,9 @@ function App() {
   return (
     <Suspense fallback={null}>
       <div id="three-js__root" ref={threejsMountPoint} onClick={handleClick} />
-      <div id="label" />
+      <div id="hotspot">
+        <div id="hotspot__label" />
+      </div>
     </Suspense>
   );
 }

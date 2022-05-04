@@ -28,13 +28,24 @@
   color: #61dafb;
 }
 
-#label {
+#hotspot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightpink;
   position: absolute; /* let us position them inside the container */
   left: 0; /* make their default position the top left of the container */
   top: 0;
   cursor: pointer; /* change the cursor to a hand when over us */
   font-size: 12px;
   user-select: none; /* don't let the text get selected */
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+
+  #hotspot__label {
+    color: black;
+  }
 }
 
 @keyframes App-logo-spin {

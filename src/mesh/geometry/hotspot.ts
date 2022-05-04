@@ -26,11 +26,12 @@ const Hotspot = (props: IHotspotProps) => {
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z);
+  mesh.visible = false;
 
   /** Create label object */
-  const labelEl = document.getElementById("label");
-  labelEl.textContent = "outside";
-  const label = new CSS2DObject(labelEl);
+  const hotspotEl = document.getElementById("hotspot");
+  hotspotEl.firstChild.textContent = "outside";
+  const label = new CSS2DObject(hotspotEl);
 
   /** Adding the label to the Hotspot mesh */
   mesh.add(label);
