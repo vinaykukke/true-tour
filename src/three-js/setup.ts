@@ -30,18 +30,7 @@ const setup = (mountPoint: MutableRefObject<HTMLElement>) => {
   mountPoint.current.appendChild(labelRenderer.domElement);
 
   const controls = new TOrbitContols(camera, labelRenderer.domElement);
-
-  /**
-   * @param [enableDamping = true] is used to give a sense of weight to the controls.
-   * An animation loop is required when either damping or auto-rotation are enabled
-   * NOTE: that if this is enabled, you must call .update() in your animation loop.
-   */
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.screenSpacePanning = false;
-  controls.lock();
-  controls.maxPolarAngle = Math.PI;
-  controls.target.set(0, 0, 0);
+  controls.setDefaults();
 
   return { scene, camera, renderer, controls, labelRenderer };
 };
