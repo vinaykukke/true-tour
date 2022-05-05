@@ -94,6 +94,7 @@ function App() {
       <div id="three-js__root" onClick={handleClick} />
       <div id="hotspot">
         <div id="hotspot__label" />
+        <span className="tooltiptext">Tooltip text</span>
       </div>
     </Suspense>
   );
