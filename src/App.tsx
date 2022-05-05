@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import setup from "./three-js/setup";
 import Pano from "./mesh/geometry/pano";
@@ -8,24 +8,43 @@ import "./App.scss";
 
 const mousePosOnClick = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
-let getIntersectedObjects: () => void;
+const pos = new THREE.Vector3();
 
 function App() {
-  const threejsMountPoint = useRef<HTMLDivElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     /** calculate pointer position in normalized device coordinates (-1 to +1) */
     mousePosOnClick.x = (event.clientX / window.innerWidth) * 2 - 1;
     mousePosOnClick.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    getIntersectedObjects();
+
+    /** Set the camera from which the ray should orginate and to what coordinates it should go to */
+    raycaster.setFromCamera(mousePosOnClick, camera);
+
+    /**
+     * Calculate objects intersecting the picking ray.
+     * The array is sorted. Meaning that closest intersecting object is at position 0.
+     */
+    const intersectedObjects = raycaster.intersectObjects<THREE.Mesh>(
+      scene.children
+    );
+    const clickedItem =
+      intersectedObjects.length > 0 && intersectedObjects.shift();
+    const moveCamera = clickedItem.object.userData.type === "hotspot";
+
+    if (moveCamera) {
+      controls.unlock();
+      camera.position.set(pos.x, pos.y, pos.z + 0.1);
+      controls.target.set(pos.x, pos.y, pos.z);
+      controls.lock();
+    }
   };
 
   useEffect(() => {
+    /** Setting up Three-js */
+    setup();
+
     /** Initial setup */
     const groupOne = new THREE.Group();
     const groupTwo = new THREE.Group();
-    const pos = new THREE.Vector3();
-    const { scene, camera, renderer, controls, labelRenderer } =
-      setup(threejsMountPoint);
 
     /** Get all the mesh */
     const pano = Pano({
@@ -57,29 +76,6 @@ function App() {
     /** Add group to scene */
     scene.add(groupOne, groupTwo); // World Space
 
-    getIntersectedObjects = () => {
-      /** Set the camera from which the ray should orginate and to what coordinates it should go to */
-      raycaster.setFromCamera(mousePosOnClick, camera);
-
-      /**
-       * Calculate objects intersecting the picking ray.
-       * The array is sorted. Meaning that closest intersecting object is at position 0.
-       */
-      const intersectedObjects = raycaster.intersectObjects<THREE.Mesh>(
-        scene.children
-      );
-      const clickedItem =
-        intersectedObjects.length > 0 && intersectedObjects.shift();
-      const moveCamera = clickedItem.object.userData.type === "hotspot";
-
-      if (moveCamera) {
-        controls.unlock();
-        camera.position.set(pos.x, pos.y, pos.z + 0.1);
-        controls.target.set(pos.x, pos.y, pos.z);
-        controls.lock();
-      }
-    };
-
     function animate() {
       /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
       controls.update();
@@ -95,7 +91,7 @@ function App() {
 
   return (
     <Suspense fallback={null}>
-      <div id="three-js__root" ref={threejsMountPoint} onClick={handleClick} />
+      <div id="three-js__root" onClick={handleClick} />
       <div id="hotspot">
         <div id="hotspot__label" />
       </div>
