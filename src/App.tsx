@@ -26,11 +26,10 @@ function App() {
     const intersectedObjects = raycaster.intersectObjects<THREE.Mesh>(
       scene.children
     );
-    const clickedItem =
-      intersectedObjects.length > 0 && intersectedObjects.shift();
-    const moveCamera = clickedItem.object.userData.type === "hotspot";
+    const clickedItem = intersectedObjects.length > 0 && intersectedObjects[0];
+    const clickedHotspot = clickedItem.object.userData.type === "hotspot";
 
-    if (moveCamera) {
+    if (clickedHotspot) {
       controls.unlock();
       camera.position.set(pos.x, pos.y, pos.z + 0.1);
       controls.target.set(pos.x, pos.y, pos.z);
@@ -92,10 +91,6 @@ function App() {
   return (
     <Suspense fallback={null}>
       <div id="three-js__root" onClick={handleClick} />
-      <div id="hotspot">
-        <div id="hotspot__label" />
-        <span className="tooltiptext">Tooltip text</span>
-      </div>
     </Suspense>
   );
 }

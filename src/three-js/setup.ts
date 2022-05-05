@@ -36,9 +36,12 @@ const setup = () => {
   global.labelRenderer.domElement.style.top = "0px";
 
   /** Append the label element to the three-js mount point */
-  mountPoint.appendChild(labelRenderer.domElement);
+  mountPoint.appendChild(global.labelRenderer.domElement);
 
-  global.controls = new TOrbitContols(global.camera, labelRenderer.domElement);
+  global.controls = new TOrbitContols(
+    global.camera,
+    global.labelRenderer.domElement
+  );
   global.controls.setDefaults();
 };
 

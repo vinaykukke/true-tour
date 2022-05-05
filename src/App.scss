@@ -28,7 +28,7 @@
   color: #61dafb;
 }
 
-#hotspot {
+.hotspot {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,7 +66,7 @@
     }
   }
 
-  #hotspot__label {
+  .hotspot__label {
     color: black;
   }
 

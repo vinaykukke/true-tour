@@ -30,8 +30,18 @@ const Hotspot = (props: IHotspotProps) => {
   mesh.visible = false;
 
   /** Create label object */
-  const hotspotEl = document.getElementById("hotspot");
-  hotspotEl.firstChild.textContent = "outside";
+  const hotspotEl = document.createElement("div");
+  const labelEl = document.createElement("div");
+  const tooltipEl = document.createElement("span");
+  hotspotEl.className = "hotspot";
+  hotspotEl.id = `hotspot__${mesh.uuid}`;
+  labelEl.className = "hotspot__label";
+  labelEl.textContent = "outside";
+  tooltipEl.className = "tooltiptext";
+  tooltipEl.textContent = "Tooltip Text";
+
+  hotspotEl.append(labelEl, tooltipEl);
+
   const label = new CSS2DObject(hotspotEl);
 
   /** Adding the label to the Hotspot mesh */
