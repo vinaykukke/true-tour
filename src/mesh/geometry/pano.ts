@@ -29,6 +29,9 @@ const Pano = (props: IPanoProps) => {
   });
   const mesh = new THREE.Mesh(geometry, material);
 
+  /** Setting user data */
+  mesh.userData = { type: "pano", name: `pano_uuid__${mesh.uuid}` };
+
   /** Set the position of the mesh */
   mesh.position.set(x, y, z);
 

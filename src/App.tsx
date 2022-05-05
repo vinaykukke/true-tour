@@ -6,22 +6,23 @@ import Hotspot from "./mesh/geometry/hotspot";
 import { DEFAULT_DATA } from "./data";
 import "./App.scss";
 
+const mousePosOnClick = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+let getIntersectedObjects: () => void;
+
 function App() {
   const threejsMountPoint = useRef<HTMLDivElement>(null);
-  const pointer = new THREE.Vector2();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // calculate pointer position in normalized device coordinates
-    // (-1 to +1) for both components
-
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    /** calculate pointer position in normalized device coordinates (-1 to +1) */
+    mousePosOnClick.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mousePosOnClick.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    getIntersectedObjects();
   };
 
   useEffect(() => {
     /** Initial setup */
     const groupOne = new THREE.Group();
     const groupTwo = new THREE.Group();
-    const raycaster = new THREE.Raycaster();
     const pos = new THREE.Vector3();
     const { scene, camera, renderer, controls, labelRenderer } =
       setup(threejsMountPoint);
@@ -56,23 +57,30 @@ function App() {
     /** Add group to scene */
     scene.add(groupOne, groupTwo); // World Space
 
-    function animate() {
-      // update the picking ray with the camera and pointer position
-      raycaster.setFromCamera(pointer, camera);
+    getIntersectedObjects = () => {
+      /** Set the camera from which the ray should orginate and to what coordinates it should go to */
+      raycaster.setFromCamera(mousePosOnClick, camera);
 
-      // calculate objects intersecting the picking ray
-      const intersects = raycaster.intersectObjects<THREE.Mesh>(scene.children);
-      if (intersects.length > 0) {
-        intersects.forEach((item) => {
-          if (item.object.uuid === hotspot.uuid) {
-            controls.unlock();
-            camera.position.set(pos.x, pos.y, pos.z + 0.1);
-            controls.target.set(pos.x, pos.y, pos.z);
-            controls.lock();
-          }
-        });
+      /**
+       * Calculate objects intersecting the picking ray.
+       * The array is sorted. Meaning that closest intersecting object is at position 0.
+       */
+      const intersectedObjects = raycaster.intersectObjects<THREE.Mesh>(
+        scene.children
+      );
+      const clickedItem =
+        intersectedObjects.length > 0 && intersectedObjects.shift();
+      const moveCamera = clickedItem.object.userData.type === "hotspot";
+
+      if (moveCamera) {
+        controls.unlock();
+        camera.position.set(pos.x, pos.y, pos.z + 0.1);
+        controls.target.set(pos.x, pos.y, pos.z);
+        controls.lock();
       }
+    };
 
+    function animate() {
       /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
       controls.update();
 

@@ -26,6 +26,7 @@ const Hotspot = (props: IHotspotProps) => {
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z);
+  mesh.userData = { type: "hotspot", name: `hotspot_uuid__${mesh.uuid}` };
   mesh.visible = false;
 
   /** Create label object */
