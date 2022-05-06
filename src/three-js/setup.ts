@@ -7,7 +7,7 @@ import { DEFAULT_DATA } from "../data";
 declare global {
   var scene: THREE.Scene;
   var camera: THREE.Camera;
-  var renderer: THREE.Renderer;
+  var renderer: THREE.WebGLRenderer;
   var controls: TOrbitContols;
   var labelRenderer: CSS2DRenderer;
 }
@@ -26,6 +26,7 @@ const setup = () => {
 
   global.renderer = new THREE.WebGLRenderer({ antialias: true });
   global.renderer.setSize(window.innerWidth, window.innerHeight);
+  global.renderer.setPixelRatio(window.devicePixelRatio);
 
   /** Mount Point for Three-js */
   mountPoint.appendChild(renderer.domElement);
@@ -36,12 +37,9 @@ const setup = () => {
   global.labelRenderer.domElement.style.top = "0px";
 
   /** Append the label element to the three-js mount point */
-  mountPoint.appendChild(global.labelRenderer.domElement);
+  mountPoint.appendChild(labelRenderer.domElement);
 
-  global.controls = new TOrbitContols(
-    global.camera,
-    global.labelRenderer.domElement
-  );
+  global.controls = new TOrbitContols(camera, labelRenderer.domElement);
   global.controls.setDefaults();
 };
 

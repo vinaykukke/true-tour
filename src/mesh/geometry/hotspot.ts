@@ -5,7 +5,6 @@ interface IHotspotProps {
   x?: number;
   y?: number;
   z?: number;
-  color?: THREE.ColorRepresentation;
 }
 
 /**
@@ -17,11 +16,11 @@ interface IHotspotProps {
  */
 
 const Hotspot = (props: IHotspotProps) => {
-  const { x = 0, y = 0, z = 0, color = "lightpink" } = props;
+  const { x = 0, y = 0, z = 0 } = props;
 
   /** Hotspot */
   const geometry = new THREE.SphereGeometry(8, 32, 32);
-  const material = new THREE.MeshBasicMaterial({ color: color });
+  const material = new THREE.MeshBasicMaterial();
 
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);

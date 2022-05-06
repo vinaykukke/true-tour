@@ -15,10 +15,14 @@ interface IPanoProps {
  * @param [img = string] Specify the image you want to be loaded.
  */
 const Pano = (props: IPanoProps) => {
+  const frustum = new THREE.Frustum();
   const { x, y, z, img } = props;
   /** Texture */
   const loader = new THREE.TextureLoader();
   const texture = loader.load(img);
+  /** This inverts the texture on the x axis */
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.repeat.x = -1;
 
   /** Pano Dome */
   const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
@@ -37,17 +41,15 @@ const Pano = (props: IPanoProps) => {
     inFrustum: false,
   };
 
-  mesh.onAfterRender = () => {
+  mesh.onBeforeRender = () => {
+    const matrix = new THREE.Matrix4().multiplyMatrices(
+      camera.projectionMatrix,
+      camera.matrixWorldInverse
+    );
     /** Mesh is inView */
     mesh.userData.inView = true;
 
-    const frustum = new THREE.Frustum();
-    frustum.setFromProjectionMatrix(
-      new THREE.Matrix4().multiplyMatrices(
-        camera.projectionMatrix,
-        camera.matrixWorldInverse
-      )
-    );
+    frustum.setFromProjectionMatrix(matrix);
     /** Indicates if the Mesh is in the scene but outside of the camera furstum */
     mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
   };
