@@ -50,4 +50,5 @@ const Hotspot = (props: IHotspotProps) => {
 
   return mesh;
 };
+
 export default Hotspot;

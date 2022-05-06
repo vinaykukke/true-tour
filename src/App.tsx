@@ -23,9 +23,9 @@ function App() {
      * Calculate objects intersecting the picking ray.
      * The array is sorted. Meaning that closest intersecting object is at position 0.
      */
-    const intersectedObjects = raycaster.intersectObjects<THREE.Mesh>(
-      scene.children
-    );
+    const intersectedObjects = raycaster.intersectObjects<
+      THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
+    >(scene.children);
     const clickedItem = intersectedObjects.length > 0 && intersectedObjects[0];
     const clickedHotspot = clickedItem.object.userData.type === "hotspot";
 
@@ -38,12 +38,8 @@ function App() {
   };
 
   useEffect(() => {
-    /** Setting up Three-js */
+    /** Initial Setup */
     setup();
-
-    /** Initial setup */
-    const groupOne = new THREE.Group();
-    const groupTwo = new THREE.Group();
 
     /** Get all the mesh */
     const pano = Pano({
@@ -63,17 +59,37 @@ function App() {
       y: 0,
       z: -195,
     });
+    const hotspot2 = Hotspot({
+      x: 150,
+      y: 0,
+      z: -195,
+    });
+    const hotspot3 = Hotspot({
+      x: 60,
+      y: 0,
+      z: -95,
+    });
+    const hotspot4 = Hotspot({
+      x: 180,
+      y: 0,
+      z: -95,
+    });
+    const hotspot5 = Hotspot({
+      x: 300,
+      y: 0,
+      z: -95,
+    });
 
     /** Getting the position of the object in world space */
     pano2.updateWorldMatrix(true, false);
     pano2.getWorldPosition(pos);
 
     /** Making a group */
-    groupOne.add(pano, hotspot);
-    groupTwo.add(pano2);
+    pano.add(hotspot, hotspot2);
+    pano2.add(hotspot3, hotspot4, hotspot5);
 
-    /** Add group to scene */
-    scene.add(groupOne, groupTwo); // World Space
+    /** Add to scene */
+    scene.add(pano, pano2); // World Space
 
     function animate() {
       /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */

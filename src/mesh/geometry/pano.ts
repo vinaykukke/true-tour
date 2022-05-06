@@ -30,7 +30,27 @@ const Pano = (props: IPanoProps) => {
   const mesh = new THREE.Mesh(geometry, material);
 
   /** Setting user data */
-  mesh.userData = { type: "pano", name: `pano_uuid__${mesh.uuid}` };
+  mesh.userData = {
+    type: "pano",
+    name: `pano_uuid__${mesh.uuid}`,
+    inView: false,
+    inFrustum: false,
+  };
+
+  mesh.onAfterRender = () => {
+    /** Mesh is inView */
+    mesh.userData.inView = true;
+
+    const frustum = new THREE.Frustum();
+    frustum.setFromProjectionMatrix(
+      new THREE.Matrix4().multiplyMatrices(
+        camera.projectionMatrix,
+        camera.matrixWorldInverse
+      )
+    );
+    /** Indicates if the Mesh is in the scene but outside of the camera furstum */
+    mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
+  };
 
   /** Set the position of the mesh */
   mesh.position.set(x, y, z);
