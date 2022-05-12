@@ -26,7 +26,6 @@ function App() {
     const intersectedObjects = raycaster.intersectObjects<
       THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
     >(scene.children);
-    console.log("p: ", scene.children);
     const clickedItem = intersectedObjects.length > 0 && intersectedObjects[0];
     const clickedHotspot = clickedItem.object.userData.type === "hotspot";
 
@@ -60,14 +59,6 @@ function App() {
       y: 0,
       z: -195,
     });
-    const pitch = 4.27805165630167;
-    const yaw = 46.34805821704455;
-    const sinPitch = Math.sin(pitch);
-    const cosPitch = Math.cos(pitch);
-    const sinYaw = Math.sin(yaw);
-    const cosYaw = Math.cos(yaw);
-    const p = new THREE.Vector3(cosPitch * cosYaw, cosPitch * sinYaw, sinPitch);
-    console.log("p: ", p);
     const hotspot2 = Hotspot({
       x: 150,
       y: 0,
