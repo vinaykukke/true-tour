@@ -46,13 +46,13 @@ function App() {
       x: 0,
       y: 0,
       z: 0,
-      img: "/pano_inside.jpg",
+      img: "/pano_1.jpg",
     });
     const pano2 = Pano({
       x: 0,
       y: 0,
-      z: 4 * DEFAULT_DATA.pano_radius,
-      img: "/pano_outside.jpg",
+      z: 5 * DEFAULT_DATA.pano_radius,
+      img: "/pano_2.jpg",
     });
     const hotspot = Hotspot({
       x: 60,

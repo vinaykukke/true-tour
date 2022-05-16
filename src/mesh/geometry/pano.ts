@@ -34,9 +34,9 @@ const Pano = (props: IPanoProps) => {
   const mesh = new THREE.Mesh(geometry, material);
 
   /** Setting user data */
+  mesh.name = "mesh__pano";
   mesh.userData = {
     type: "pano",
-    name: `pano_uuid__${mesh.uuid}`,
     inView: false,
     inFrustum: false,
   };

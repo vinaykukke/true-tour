@@ -27,6 +27,7 @@ const Hotspot = (props: IHotspotProps) => {
   mesh.position.set(x, y, z);
   mesh.userData = { type: "hotspot", name: `hotspot_uuid__${mesh.uuid}` };
   mesh.visible = false;
+  mesh.name = "mesh__hotspot";
 
   /** Create label object */
   const hotspotEl = document.createElement("div");
