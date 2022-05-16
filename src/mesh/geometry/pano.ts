@@ -23,6 +23,8 @@ const Pano = (props: IPanoProps) => {
   /** This inverts the texture on the x axis */
   texture.wrapS = THREE.RepeatWrapping;
   texture.repeat.x = -1;
+  /** Centers the texture to the center of the image */
+  texture.offset.x = 0.25; // 0.0 - 1.0
 
   /** Pano Dome */
   const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
