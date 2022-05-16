@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { VRButton } from "three/examples/jsm/webxr/VRButton";
 import TOrbitContols from "./extensions/TOrbitContols";
 import { DEFAULT_DATA } from "../data";
 
@@ -41,6 +42,10 @@ const setup = () => {
 
   global.controls = new TOrbitContols(camera, labelRenderer.domElement);
   global.controls.setDefaults();
+
+  /** Enabling VR */
+  document.body.appendChild(VRButton.createButton(renderer));
+  renderer.xr.enabled = true;
 };
 
 export default setup;
