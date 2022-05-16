@@ -23,25 +23,25 @@ const setup = () => {
     DEFAULT_DATA.camera_far
   );
 
-  global.camera.position.set(0, 0, 0.1);
+  camera.position.set(0, 0, 0.1);
 
   global.renderer = new THREE.WebGLRenderer({ antialias: true });
-  global.renderer.setSize(window.innerWidth, window.innerHeight);
-  global.renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
 
   /** Mount Point for Three-js */
   mountPoint.appendChild(renderer.domElement);
 
   global.labelRenderer = new CSS2DRenderer();
-  global.labelRenderer.setSize(window.innerWidth, window.innerHeight);
-  global.labelRenderer.domElement.style.position = "absolute";
-  global.labelRenderer.domElement.style.top = "0px";
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.domElement.style.position = "absolute";
+  labelRenderer.domElement.style.top = "0px";
 
   /** Append the label element to the three-js mount point */
   mountPoint.appendChild(labelRenderer.domElement);
 
   global.controls = new TOrbitContols(camera, labelRenderer.domElement);
-  global.controls.setDefaults();
+  controls.setDefaults();
 
   /** Enabling VR */
   document.body.appendChild(VRButton.createButton(renderer));
