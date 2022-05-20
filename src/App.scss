@@ -78,6 +78,26 @@
   }
 }
 
+.hotspot__add {
+  position: absolute;
+  top: 50px;
+  left: 30px;
+  padding: 15px;
+  background-color: #61dafb;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.hotspot__delete {
+  position: absolute;
+  top: 50px;
+  left: 160px;
+  padding: 15px;
+  background-color: red;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

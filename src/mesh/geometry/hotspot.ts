@@ -11,12 +11,20 @@ interface IHotspotProps {
  * Create a new Hotspot and set its position in the scene
  * @param [x = number] x Posotion. Default is 0
  * @param [y = number] y Position. Default is 0
- * @param [z = number] z Position. Default is 0
- * @param [color = THREE.ColorRepresentation] Specify the color of the hotspot. Default is "lightpink"
+ * @param [z = number] z Position. Default is -195
  */
+const Hotspot = (props?: IHotspotProps) => {
+  /** Default position for new hotspot */
+  let x = 0;
+  let y = 0;
+  let z = -195;
 
-const Hotspot = (props: IHotspotProps) => {
-  const { x = 0, y = 0, z = 0 } = props;
+  /** If positon values are give, use them */
+  if (props && Object.keys(props).length > 0) {
+    x = props.x;
+    y = props.y;
+    z = props.z;
+  }
 
   /** Hotspot */
   const geometry = new THREE.SphereGeometry(8, 32, 32);
@@ -25,7 +33,11 @@ const Hotspot = (props: IHotspotProps) => {
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z);
-  mesh.userData = { type: "hotspot", name: `hotspot_uuid__${mesh.uuid}` };
+  mesh.userData = {
+    type: "hotspot",
+    name: `hotspot_uuid__${mesh.uuid}`,
+    draggable: true,
+  };
   mesh.visible = false;
   mesh.name = "mesh__hotspot";
 
