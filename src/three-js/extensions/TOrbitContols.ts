@@ -39,11 +39,25 @@ class TOrbitContols extends OrbitControls {
   }
 
   /**
-   * Unlocks the Orbit Controls, allowing the camera to move about the scene.
+   * Unlocks the Orbit Controls, allowing the camera to zoom out of the scene.
    */
   public unlock() {
     this.minDistance = 0;
     this.maxDistance = Infinity;
+  }
+
+  /**
+   * Enables the Orbit Controls, allowing the camera to move about the scene.
+   */
+  public enable() {
+    this.enabled = true;
+  }
+
+  /**
+   * Disables the Orbit Controls, not allowing the camera to move about the scene.
+   */
+  public disable() {
+    this.enabled = false;
   }
 }
 
