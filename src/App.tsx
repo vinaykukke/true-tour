@@ -3,12 +3,17 @@ import * as THREE from "three";
 import setup from "./three-js/setup";
 import Pano from "./mesh/geometry/pano";
 import Hotspot from "./mesh/geometry/hotspot";
+import { removeHotspot } from "./mesh/geometry/hotspot";
 import "./App.scss";
 
+/** Selected / Draggable objects */
+let draggableObject: THREE.Object3D;
+let selectedObject: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
+
+/** Vectors for mouse events */
 const clickMouse = new THREE.Vector2();
 const moveMouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
-let draggableObject: THREE.Object3D;
 
 window.addEventListener("click", (event: MouseEvent) => {
   if (draggableObject) {
@@ -33,6 +38,7 @@ window.addEventListener("click", (event: MouseEvent) => {
 
   if (obj.userData.draggable) {
     draggableObject = obj;
+    selectedObject = obj;
   }
 });
 
@@ -115,13 +121,21 @@ function App() {
     pano.add(hs);
   };
 
+  const deleteHotspot = () => {
+    /** Remove the selected object from the scene */
+    selectedObject.parent.remove(selectedObject);
+    removeHotspot(selectedObject);
+  };
+
   return (
     <Suspense fallback={null}>
       <div id="three-js__root" />
       <div className="hotspot__add" onClick={addHotspot}>
         Add Hotspot
       </div>
-      <div className="hotspot__delete">Delete Hotspot</div>
+      <div className="hotspot__delete" onClick={deleteHotspot}>
+        Delete Hotspot
+      </div>
     </Suspense>
   );
 }

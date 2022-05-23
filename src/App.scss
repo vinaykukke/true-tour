@@ -43,6 +43,10 @@
   height: 48px;
   width: 48px;
 
+  &:focus {
+    border: 2px solid rgba(0, 140, 255, 0.947);
+  }
+
   /* Tooltip text */
   .tooltiptext {
     visibility: hidden;

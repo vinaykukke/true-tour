@@ -7,6 +7,8 @@ interface IHotspotProps {
   z?: number;
 }
 
+let tabindex = 0;
+
 /**
  * Create a new Hotspot and set its position in the scene
  * @param [x = number] x Posotion. Default is 0
@@ -46,7 +48,10 @@ const Hotspot = (props?: IHotspotProps) => {
   const labelEl = document.createElement("div");
   const tooltipEl = document.createElement("span");
   hotspotEl.className = "hotspot";
+  hotspotEl.dataset.uuid = mesh.uuid;
+  hotspotEl.dataset.type = mesh.userData.type;
   hotspotEl.id = `hotspot__${mesh.uuid}`;
+  hotspotEl.tabIndex = tabindex++;
   labelEl.className = "hotspot__label";
   labelEl.textContent = "outside";
   tooltipEl.className = "tooltiptext";
@@ -61,6 +66,17 @@ const Hotspot = (props?: IHotspotProps) => {
   label.position.set(0, 0, 0); // Local space OR Object space
 
   return mesh;
+};
+
+export const removeHotspot = (
+  object: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
+) => {
+  /** Dispose the Material & Geometry */
+  object.geometry.dispose();
+  object.material.dispose();
+
+  /** Remove the associated HTML node */
+  document.getElementById(`hotspot__${object.uuid}`).remove();
 };
 
 export default Hotspot;
