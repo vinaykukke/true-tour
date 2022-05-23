@@ -27,7 +27,7 @@ const Pano = (props: IPanoProps) => {
   texture.offset.x = 0.25; // 0.0 - 1.0
 
   /** Pano Dome */
-  const geometry = new THREE.SphereBufferGeometry(900, 500, 250);
+  const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
   const material = new THREE.MeshBasicMaterial({
     map: texture,
     color: 0xffffff,

@@ -46,7 +46,7 @@ const PublishTour = () => {
     const pano2 = Pano({
       x: 0,
       y: 0,
-      z: 15 * DEFAULT_DATA.pano_radius,
+      z: 5 * DEFAULT_DATA.pano_radius,
       img: "/pano_2.jpg",
     });
     const hotspot = Hotspot({

@@ -62,10 +62,10 @@ const dragObject = () => {
 
     if (found.length > 0) {
       found.forEach((item) => {
-        if (item.object.userData.draggable) {
-          draggableObject.position.x = item.point.x;
-          draggableObject.position.y = item.point.y;
-        }
+        /** If the intersected object is not a pano OR is a hotspot the skip it and move to next item */
+        if (item.object.userData.type !== "pano") return;
+
+        draggableObject.position.set(item.point.x, item.point.y, item.point.z);
       });
     }
 
