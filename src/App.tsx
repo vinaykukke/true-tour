@@ -1,9 +1,9 @@
 import React, { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import setup from "./three-js/setup";
-import Pano from "./mesh/geometry/pano";
-import Hotspot from "./mesh/geometry/hotspot";
-import { removeHotspot } from "./mesh/geometry/hotspot";
+import Pano from "./components/Pano";
+import Hotspot from "./components/Hotspot";
+import { removeHotspot } from "./components/Hotspot";
 import "./App.scss";
 
 /** Selected / Draggable objects */
@@ -124,10 +124,12 @@ function App() {
   const deleteHotspot = () => {
     /** Remove the selected object from the scene */
     if (selectedObject) {
-      selectedObject.parent.remove(selectedObject);
+      selectedObject.parent?.remove(selectedObject);
       removeHotspot(selectedObject);
     }
   };
+
+  const addEditReq = () => console.log("Adding!");
 
   return (
     <Suspense fallback={null}>
@@ -141,6 +143,9 @@ function App() {
       </div>
       <div className="hotspot__delete" onClick={deleteHotspot}>
         Delete Hotspot
+      </div>
+      <div className="add__editRequest" onClick={addEditReq}>
+        Add Edit Request
       </div>
     </Suspense>
   );

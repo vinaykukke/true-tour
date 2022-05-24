@@ -32,7 +32,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightpink;
+  background-color: #333;
   position: absolute; /* let us position them inside the container */
   left: 0; /* make their default position the top left of the container */
   top: 0;
@@ -71,7 +71,7 @@
   }
 
   .hotspot__label {
-    color: black;
+    color: white;
   }
 
   /* Tooltip container */
@@ -88,6 +88,16 @@
   left: 30px;
   padding: 15px;
   background-color: #61dafb;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add__editRequest {
+  position: absolute;
+  top: 50px;
+  left: 310px;
+  padding: 15px;
+  background-color: #8061fb;
   cursor: pointer;
   border-radius: 5px;
 }

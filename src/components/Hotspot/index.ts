@@ -1,13 +1,12 @@
 import * as THREE from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { createHotspotHTML } from "./helpers/createHotspot";
 
 interface IHotspotProps {
   x?: number;
   y?: number;
   z?: number;
 }
-
-let tabindex = 0;
 
 /**
  * Create a new Hotspot and set its position in the scene
@@ -44,20 +43,7 @@ const Hotspot = (props?: IHotspotProps) => {
   mesh.name = "mesh__hotspot";
 
   /** Create label object */
-  const hotspotEl = document.createElement("div");
-  const labelEl = document.createElement("div");
-  const tooltipEl = document.createElement("span");
-  hotspotEl.className = "hotspot";
-  hotspotEl.dataset.uuid = mesh.uuid;
-  hotspotEl.dataset.type = mesh.userData.type;
-  hotspotEl.id = `hotspot__${mesh.uuid}`;
-  hotspotEl.tabIndex = tabindex++;
-  labelEl.className = "hotspot__label";
-  labelEl.textContent = "outside";
-  tooltipEl.className = "tooltiptext";
-  tooltipEl.textContent = "Tooltip Text";
-
-  hotspotEl.append(labelEl, tooltipEl);
+  const hotspotEl = createHotspotHTML(mesh);
 
   const label = new CSS2DObject(hotspotEl);
 

@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
-import Pano from "../mesh/geometry/pano";
-import Hotspot from "../mesh/geometry/hotspot";
+import Pano from "../components/Pano";
+import Hotspot from "../components/Hotspot";
 import { DEFAULT_DATA } from "../data";
 
 const mousePosOnClick = new THREE.Vector2();
