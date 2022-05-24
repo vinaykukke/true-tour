@@ -15,7 +15,7 @@ const clickMouse = new THREE.Vector2();
 const moveMouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
-window.addEventListener("click", (event: MouseEvent) => {
+const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   if (draggableObject) {
     draggableObject = null;
     return;
@@ -40,13 +40,13 @@ window.addEventListener("click", (event: MouseEvent) => {
     draggableObject = obj;
     selectedObject = obj;
   }
-});
+};
 
-window.addEventListener("mousemove", (event: MouseEvent) => {
+const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
   /** calculate pointer position in normalized device coordinates (-1 to +1) */
   moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   moveMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-});
+};
 
 const dragObject = () => {
   if (draggableObject) {
@@ -123,13 +123,19 @@ function App() {
 
   const deleteHotspot = () => {
     /** Remove the selected object from the scene */
-    selectedObject.parent.remove(selectedObject);
-    removeHotspot(selectedObject);
+    if (selectedObject) {
+      selectedObject.parent.remove(selectedObject);
+      removeHotspot(selectedObject);
+    }
   };
 
   return (
     <Suspense fallback={null}>
-      <div id="three-js__root" />
+      <div
+        id="three-js__root"
+        onClick={handleClick}
+        onMouseMove={handleMouseMove}
+      />
       <div className="hotspot__add" onClick={addHotspot}>
         Add Hotspot
       </div>
