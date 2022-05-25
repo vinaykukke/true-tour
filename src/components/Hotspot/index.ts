@@ -1,12 +1,7 @@
 import * as THREE from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { createHotspotHTML } from "./helpers/createHotspot";
-
-interface IHotspotProps {
-  x?: number;
-  y?: number;
-  z?: number;
-}
+import { IHotspotProps, THotspotType } from "src/types/hotspot";
 
 /**
  * Create a new Hotspot and set its position in the scene
@@ -16,19 +11,21 @@ interface IHotspotProps {
  */
 const Hotspot = (props?: IHotspotProps) => {
   /** Default position for new hotspot */
-  let x = 0;
-  let y = 0;
-  let z = -195;
+  let x: number = 0;
+  let y: number = 0;
+  let z: number = -195;
+  let type: THotspotType = "default";
 
   /** If positon values are give, use them */
   if (props && Object.keys(props).length > 0) {
-    x = props.x;
-    y = props.y;
-    z = props.z;
+    x = props.x ? props.x : x;
+    y = props.y ? props.y : y;
+    z = props.z ? props.z : z;
+    type = props.type ? props.type : type;
   }
 
   /** Hotspot */
-  const geometry = new THREE.SphereGeometry(8, 32, 32);
+  const geometry = new THREE.SphereGeometry(10, 32, 32);
   const material = new THREE.MeshBasicMaterial();
 
   /** Create mesh */
@@ -36,6 +33,7 @@ const Hotspot = (props?: IHotspotProps) => {
   mesh.position.set(x, y, z);
   mesh.userData = {
     type: "hotspot",
+    varient: type,
     name: `hotspot_uuid__${mesh.uuid}`,
     draggable: true,
   };
@@ -43,7 +41,7 @@ const Hotspot = (props?: IHotspotProps) => {
   mesh.name = "mesh__hotspot";
 
   /** Create label object */
-  const hotspotEl = createHotspotHTML(mesh);
+  const hotspotEl = createHotspotHTML(mesh, type);
 
   const label = new CSS2DObject(hotspotEl);
 

@@ -4,6 +4,7 @@ import setup from "./three-js/setup";
 import Pano from "./components/Pano";
 import Hotspot from "./components/Hotspot";
 import { removeHotspot } from "./components/Hotspot";
+import { THotspotType } from "./types/hotspot";
 import "./App.scss";
 
 /** Selected / Draggable objects */
@@ -115,9 +116,9 @@ function App() {
     animate();
   }, []);
 
-  const addHotspot = () => {
+  const addHotspot = (type?: THotspotType) => () => {
     const pano = scene.getObjectByName("mesh__pano");
-    const hs = Hotspot();
+    const hs = Hotspot({ type });
     pano.add(hs);
   };
 
@@ -129,8 +130,6 @@ function App() {
     }
   };
 
-  const addEditReq = () => console.log("Adding!");
-
   return (
     <Suspense fallback={null}>
       <div
@@ -138,15 +137,16 @@ function App() {
         onClick={handleClick}
         onMouseMove={handleMouseMove}
       />
-      <div className="hotspot__add" onClick={addHotspot}>
+      <div className="hotspot__add" onClick={addHotspot()}>
         Add Hotspot
       </div>
       <div className="hotspot__delete" onClick={deleteHotspot}>
         Delete Hotspot
       </div>
-      <div className="add__editRequest" onClick={addEditReq}>
+      <div className="add__editRequest" onClick={addHotspot("editRequest")}>
         Add Edit Request
       </div>
+      <div id="select" />
     </Suspense>
   );
 }

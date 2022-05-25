@@ -1,14 +1,18 @@
 import * as THREE from "three";
+import createTooltipHTML from "./createTooltip";
+import { THotspotType } from "../../../types/hotspot";
 
 let tabindex = 0;
+let editReqindex = 1;
 
 export const createHotspotHTML = (
-  mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
+  mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
+  type?: THotspotType
 ) => {
   /** Create label object */
   const hotspotEl = document.createElement("div");
-  const labelEl = createLabelHTML();
-  const tooltipEl = createTooltipHTML();
+  const labelEl = createLabelHTML(type);
+  const tooltipEl = createTooltipHTML(type);
 
   hotspotEl.className = "hotspot";
   hotspotEl.dataset.uuid = mesh.uuid;
@@ -21,18 +25,14 @@ export const createHotspotHTML = (
   return hotspotEl;
 };
 
-const createLabelHTML = () => {
+const createLabelHTML = (type?: THotspotType) => {
   const labelEl = document.createElement("div");
   labelEl.className = "hotspot__label";
   labelEl.textContent = "outside";
 
+  if (type === "editRequest") {
+    labelEl.textContent = String(editReqindex++);
+  }
+
   return labelEl;
-};
-
-const createTooltipHTML = () => {
-  const tooltipEl = document.createElement("span");
-  tooltipEl.className = "tooltiptext";
-  tooltipEl.textContent = "Tooltip Text";
-
-  return tooltipEl;
 };
