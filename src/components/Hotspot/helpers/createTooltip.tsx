@@ -7,6 +7,10 @@ const createTooltipHTML = (type?: THotspotType) => {
     type === "editRequest" ? "tooltiptext tooltip-select" : "tooltiptext";
   tooltipEl.textContent = "Tooltip Text";
 
+  /** To enable usage of elements inside the tooltip OrbitalControls need to be disabled */
+  tooltipEl.onmouseover = () => controls.disable();
+  tooltipEl.onmouseout = () => controls.enable();
+
   if (type === "editRequest") {
     /** Render to HTML using react */
     const root = ReactDOM.createRoot(tooltipEl);
@@ -18,8 +22,8 @@ const createTooltipHTML = (type?: THotspotType) => {
 
 const EditReqElement = () => (
   <>
-    <textarea placeholder="Comment" id="unique-post-comment-input-2" />
-    <select id="unique-post-comment-select-2" value="">
+    <textarea placeholder="Comment" id="edit_req__comments" />
+    <select id="edit_req__select">
       <option value="">Select Request Type</option>
       <option value="Minimum requirement">Minimum requirement</option>
       <option value="Additional request">Additional request</option>

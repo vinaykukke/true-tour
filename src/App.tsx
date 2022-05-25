@@ -146,7 +146,6 @@ function App() {
       <div className="add__editRequest" onClick={addHotspot("editRequest")}>
         Add Edit Request
       </div>
-      <div id="select" />
     </Suspense>
   );
 }
