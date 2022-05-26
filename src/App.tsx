@@ -17,10 +17,15 @@ const moveMouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-  if (draggableObject) {
+  const doubleClick = event.detail === 2;
+  const singleClick = event.detail === 1;
+
+  /** Drop the object */
+  if (singleClick && draggableObject) {
     draggableObject = null;
     return;
   }
+
   /** calculate pointer position in normalized device coordinates (-1 to +1) */
   clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -38,8 +43,8 @@ const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   const obj = found.length > 0 && found[0].object;
 
   if (obj.userData.draggable) {
-    draggableObject = obj;
     selectedObject = obj;
+    if (doubleClick) draggableObject = obj;
   }
 };
 
