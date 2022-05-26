@@ -1,5 +1,6 @@
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
+import setup from "../three-js/setup";
 import Pano from "../components/Pano";
 import Hotspot from "../components/Hotspot";
 import { DEFAULT_DATA } from "../data";
@@ -36,6 +37,9 @@ const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 
 const PublishTour = () => {
   useEffect(() => {
+    /** Initial Setup */
+    setup();
+
     /** Get all the mesh */
     const pano = Pano({
       x: 0,
@@ -85,6 +89,18 @@ const PublishTour = () => {
 
     /** Add to scene */
     scene.add(pano, pano2); // World Space
+
+    function animate() {
+      /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
+      controls.update();
+
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   }, []);
 
   return (

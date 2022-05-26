@@ -60,7 +60,8 @@ export const removeHotspot = (
   object.material.dispose();
 
   /** Remove the associated HTML node */
-  document.getElementById(`hotspot__${object.uuid}`).remove();
+  const hs = document.getElementById(`hotspot__${object.uuid}`);
+  hs && hs.remove();
 };
 
 export default Hotspot;

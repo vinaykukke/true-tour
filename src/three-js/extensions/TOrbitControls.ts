@@ -17,10 +17,10 @@ class TOrbitContols extends OrbitControls {
      * NOTE: that if this is enabled, you must call .update() in your animation loop.
      */
     this.enableDamping = true;
-    this.dampingFactor = 0.05;
+    this.dampingFactor = 0.1;
     this.screenSpacePanning = false;
     this.maxPolarAngle = Math.PI;
-    this.rotateSpeed = -0.5;
+    this.rotateSpeed = -0.25;
     this.target.set(0, 0, 0);
     this.lock();
   }
