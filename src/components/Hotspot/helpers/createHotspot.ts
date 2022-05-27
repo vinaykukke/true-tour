@@ -14,7 +14,9 @@ export const createHotspotHTML = (
   const labelEl = createLabelHTML(type);
   const tooltipEl = createTooltipHTML(type);
 
-  hotspotEl.className = "hotspot";
+  hotspotEl.classList.add("hotspot");
+  if (mesh.userData.new) hotspotEl.classList.add("hotspot_new__focus");
+
   hotspotEl.dataset.uuid = mesh.uuid;
   hotspotEl.dataset.type = mesh.userData.type;
   hotspotEl.id = `hotspot__${mesh.uuid}`;
@@ -30,9 +32,7 @@ const createLabelHTML = (type?: THotspotType) => {
   labelEl.className = "hotspot__label";
   labelEl.textContent = "outside";
 
-  if (type === "editRequest") {
-    labelEl.textContent = String(editReqindex++);
-  }
+  if (type === "editRequest") labelEl.textContent = String(editReqindex++);
 
   return labelEl;
 };

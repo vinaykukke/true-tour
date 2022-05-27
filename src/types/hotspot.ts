@@ -13,4 +13,5 @@ export interface IHotspotProps {
   y?: number;
   z?: number;
   type?: THotspotType;
+  newHotspot?: boolean;
 }

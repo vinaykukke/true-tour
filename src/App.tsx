@@ -43,8 +43,19 @@ const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   const obj = found.length > 0 && found[0].object;
 
   if (obj.userData.draggable) {
-    selectedObject = obj;
     if (doubleClick) draggableObject = obj;
+    selectedObject = obj;
+  }
+
+  /** Clear selectedObject once focus is shifted from hotspot */
+  if (obj.name === "mesh__pano") selectedObject = null;
+
+  /** Removes the focus of newly added hotspot */
+  const hs = document.getElementsByClassName("hotspot_new__focus");
+  for (let i = 0; i < hs.length; i++) {
+    const element = hs[i];
+    element.classList.remove("hotspot_new__focus");
+    selectedObject = null;
   }
 };
 
@@ -71,7 +82,7 @@ const dragObject = () => {
         /** If the intersected object is not a pano OR is a hotspot the skip it and move to next item */
         if (item.object.userData.type !== "pano") return;
 
-        draggableObject.position.set(item.point.x, item.point.y, item.point.z);
+        draggableObject.position.copy(item.point.clone());
       });
     }
 
@@ -123,8 +134,10 @@ function App() {
 
   const addHotspot = (type?: THotspotType) => () => {
     const pano = scene.getObjectByName("mesh__pano");
-    const hs = Hotspot({ type });
+    const hs = Hotspot({ type, newHotspot: true });
+    selectedObject = hs;
     pano.add(hs);
+    // hs.position.copy(controls.target.clone());
   };
 
   const deleteHotspot = () => {

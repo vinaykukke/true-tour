@@ -15,6 +15,7 @@ const Hotspot = (props?: IHotspotProps) => {
   let y: number = 0;
   let z: number = -195;
   let type: THotspotType = "default";
+  let newHotspot: boolean = false;
 
   /** If positon values are give, use them */
   if (props && Object.keys(props).length > 0) {
@@ -22,6 +23,7 @@ const Hotspot = (props?: IHotspotProps) => {
     y = props.y ? props.y : y;
     z = props.z ? props.z : z;
     type = props.type ? props.type : type;
+    newHotspot = props.newHotspot ? props.newHotspot : newHotspot;
   }
 
   /** Hotspot */
@@ -36,6 +38,7 @@ const Hotspot = (props?: IHotspotProps) => {
     varient: type,
     name: `hotspot_uuid__${mesh.uuid}`,
     draggable: true,
+    new: newHotspot ? true : false,
   };
   mesh.visible = false;
   mesh.name = "mesh__hotspot";
