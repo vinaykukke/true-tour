@@ -146,6 +146,7 @@ function App() {
       selectedObject.parent?.remove(selectedObject);
       removeHotspot(selectedObject);
     }
+    if (selectedObject.userData.varient === "editRequest") editReqindex--;
   };
 
   return (

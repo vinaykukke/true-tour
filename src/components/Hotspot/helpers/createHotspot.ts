@@ -3,7 +3,6 @@ import createTooltipHTML from "./createTooltip";
 import { THotspotType } from "../../../types/hotspot";
 
 let tabindex = 0;
-let editReqindex = 1;
 
 export const createHotspotHTML = (
   mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
@@ -32,7 +31,7 @@ const createLabelHTML = (type?: THotspotType) => {
   labelEl.className = "hotspot__label";
   labelEl.textContent = "outside";
 
-  if (type === "editRequest") labelEl.textContent = String(editReqindex++);
+  if (type === "editRequest") labelEl.textContent = String(++editReqindex);
 
   return labelEl;
 };

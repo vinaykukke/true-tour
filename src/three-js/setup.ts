@@ -11,6 +11,7 @@ declare global {
   var renderer: THREE.WebGLRenderer;
   var controls: TOrbitContols;
   var labelRenderer: CSS2DRenderer;
+  var editReqindex: number;
 }
 
 const setup = () => {
@@ -24,6 +25,8 @@ const setup = () => {
   );
 
   camera.position.set(0, 0, 0.1);
+
+  global.editReqindex = 0;
 
   global.renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
