@@ -133,11 +133,21 @@ function App() {
   }, []);
 
   const addHotspot = (type?: THotspotType) => () => {
+    const screenCentre = new THREE.Vector3(0, 0, 1);
     const pano = scene.getObjectByName("mesh__pano");
     const hs = Hotspot({ type, newHotspot: true });
+
+    screenCentre.unproject(camera).sub(camera.position).normalize();
+    const ray = new THREE.Raycaster(camera.position, screenCentre);
+
+    const found = ray.intersectObject(pano);
+    const obj = found.length > 0 && found[0];
+
+    if (obj) hs.position.copy(obj.point.clone());
+
     selectedObject = hs;
+
     pano.add(hs);
-    // hs.position.copy(controls.target.clone());
   };
 
   const deleteHotspot = () => {
