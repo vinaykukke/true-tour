@@ -1,3 +1,11 @@
+#three-js__root {
+  cursor: grab;
+
+  :active {
+    cursor: grabbing;
+  }
+}
+
 .hotspot {
   display: flex;
   justify-content: center;

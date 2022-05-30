@@ -9,9 +9,6 @@ export type THotspotType =
   | "editRequest";
 
 export interface IHotspotProps {
-  x?: number;
-  y?: number;
-  z?: number;
   type?: THotspotType;
   newHotspot?: boolean;
 }

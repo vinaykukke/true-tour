@@ -42,42 +42,30 @@ const PublishTour = () => {
 
     /** Get all the mesh */
     const pano = Pano({
-      x: 0,
-      y: 0,
-      z: 0,
       img: "/pano_1.jpg",
     });
+    /** Set the position of the pano */
+    pano.position.set(0, 0, 0);
+
     const pano2 = Pano({
-      x: 0,
-      y: 0,
-      z: 5 * DEFAULT_DATA.pano_radius,
       img: "/pano_2.jpg",
     });
-    const hotspot = Hotspot({
-      x: 60,
-      y: 0,
-      z: -195,
-    });
-    const hotspot2 = Hotspot({
-      x: 150,
-      y: 0,
-      z: -195,
-    });
-    const hotspot3 = Hotspot({
-      x: 60,
-      y: 0,
-      z: -195,
-    });
-    const hotspot4 = Hotspot({
-      x: 180,
-      y: 0,
-      z: -195,
-    });
-    const hotspot5 = Hotspot({
-      x: 300,
-      y: 0,
-      z: -195,
-    });
+    pano2.position.set(0, 0, 5 * DEFAULT_DATA.pano_radius);
+
+    const hotspot = Hotspot();
+    hotspot.position.set(60, 0, -195);
+
+    const hotspot2 = Hotspot();
+    hotspot2.position.set(150, 0, -195);
+
+    const hotspot3 = Hotspot();
+    hotspot3.position.set(60, 0, -195);
+
+    const hotspot4 = Hotspot();
+    hotspot4.position.set(180, 0, -195);
+
+    const hotspot5 = Hotspot();
+    hotspot5.position.set(300, 0, -195);
 
     /** Getting the position of the object in world space */
     pano2.updateWorldMatrix(true, false);

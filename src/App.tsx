@@ -98,17 +98,13 @@ function App() {
 
     /** Get all the mesh */
     const pano = Pano({
-      x: 0,
-      y: 0,
-      z: 0,
       img: "/pano_1.jpg",
     });
+    /** Set the position of the pano */
+    pano.position.set(0, 0, 0);
 
-    const hotspot = Hotspot({
-      x: 60,
-      y: 0,
-      z: -195,
-    });
+    const hotspot = Hotspot();
+    hotspot.position.set(60, 0, -195);
 
     /** Making a group */
     pano.add(hotspot);
@@ -133,7 +129,8 @@ function App() {
   }, []);
 
   const addHotspot = (type?: THotspotType) => () => {
-    const screenCentre = new THREE.Vector3(0, 0, 1);
+    /** https://stackoverflow.com/questions/11036106/three-js-projector-and-ray-objects */
+    const screenCentre = new THREE.Vector3(0, 0, 0.5);
     const pano = scene.getObjectByName("mesh__pano");
     const hs = Hotspot({ type, newHotspot: true });
 
@@ -156,7 +153,7 @@ function App() {
       selectedObject.parent?.remove(selectedObject);
       removeHotspot(selectedObject);
     }
-    if (selectedObject.userData.varient === "editRequest") editReqindex--;
+    if (selectedObject?.userData.varient === "editRequest") editReqindex--;
   };
 
   return (

@@ -5,23 +5,15 @@ import { IHotspotProps, THotspotType } from "src/types/hotspot";
 
 /**
  * Create a new Hotspot and set its position in the scene
- * @param [x = number] x Posotion. Default is 0
- * @param [y = number] y Position. Default is 0
- * @param [z = number] z Position. Default is -195
+ * Hotspot is always in the center of the screen
  */
 const Hotspot = (props?: IHotspotProps) => {
   /** Default position for new hotspot */
-  let x: number = 0;
-  let y: number = 0;
-  let z: number = -195;
   let type: THotspotType = "default";
   let newHotspot: boolean = false;
 
   /** If positon values are give, use them */
   if (props && Object.keys(props).length > 0) {
-    x = props.x ? props.x : x;
-    y = props.y ? props.y : y;
-    z = props.z ? props.z : z;
     type = props.type ? props.type : type;
     newHotspot = props.newHotspot ? props.newHotspot : newHotspot;
   }
@@ -32,7 +24,6 @@ const Hotspot = (props?: IHotspotProps) => {
 
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(x, y, z);
   mesh.userData = {
     type: "hotspot",
     varient: type,

@@ -1,22 +1,16 @@
 import * as THREE from "three";
 
 interface IPanoProps {
-  x: number;
-  y: number;
-  z: number;
   img: string;
 }
 
 /**
  * Create a new Hotspot and set its position in the scene
- * @param [x = number] x Posotion. No Default. Required value.
- * @param [y = number] y Position. No Default. Required value.
- * @param [z = number] z Position. No Default. Required value.
  * @param [img = string] Specify the image you want to be loaded.
  */
 const Pano = (props: IPanoProps) => {
   const frustum = new THREE.Frustum();
-  const { x, y, z, img } = props;
+  const { img } = props;
   /** Texture */
   const loader = new THREE.TextureLoader();
   const texture = loader.load(img);
@@ -55,9 +49,6 @@ const Pano = (props: IPanoProps) => {
     /** Indicates if the Mesh is in the scene but outside of the camera furstum */
     mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
   };
-
-  /** Set the position of the mesh */
-  mesh.position.set(x, y, z);
 
   return mesh;
 };
