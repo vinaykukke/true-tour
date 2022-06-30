@@ -16,6 +16,7 @@ const Pano = (props: IPanoProps) => {
   const texture = loader.load(img);
   /** This inverts the texture on the x axis */
   texture.wrapS = THREE.RepeatWrapping;
+  texture.minFilter = THREE.NearestFilter;
   texture.repeat.x = -1;
   /** Centers the texture to the center of the image */
   texture.offset.x = 0.25; // 0.0 - 1.0
