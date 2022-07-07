@@ -132,16 +132,48 @@ const text = { a: '', b: '', c: '' }
 - Avoid using inline styles. Always use CSS classes instead. This leads to better code seperation and cleaner code.
 
 ```jsx
+/** Aviod */
 <div
   style={{
-    maxHeight: reorder ? "200px" : "40px",
+    maxHeight: reorder ? "200px" : "40px", // <= Instead of doing this you can use CSS-IN-JS libraries
     transition: "0.3s linear all",
     overflow: reorder ? "auto" : "hidden",
     backgroundColor: "white",
     border: "1px solid lightgrey",
   }}
 />
+
+/***********************************************************************/
+
+/** Use */
+<div className="someclass" />
 ```
+
+```css
+/** CSS */
+.someclass {
+  maxHeight: "200px"
+  transition: "0.3s linear all",
+  overflow: "auto",
+  backgroundColor: "white",
+  border: "1px solid lightgrey",
+}
+```
+
+- If there is a requirement in the project of being able to dynamically change the style of some components in JS then you can use CSS-In-JS libraries (Listed below).
+
+  - [Styles Components](https://styled-components.com/)
+  - [JSS](https://cssinjs.org/)
+  - [Emotion](https://emotion.sh/docs/introduction)
+
+- CSS-IN-JS libraries offer a lot of advantages compared to just trying to dynamically change the CSS by adding it in-line in the JS code (_this should be carefully considered based on the requirements for the project, because they can add unnecessary overhead to the project as well_)
+
+  - Automatic critical CSS (_this means your users load the least amount of code necessary_)
+  - No class name bugs
+  - Easier deletion of CSS
+  - Simple dynamic styling
+  - Painless maintenance
+  - Automatic vendor prefixing
 
 - Use default props for all components. This is specially true if you are not using a Typechecker.
 
