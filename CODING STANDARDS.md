@@ -152,11 +152,11 @@ const text = { a: '', b: '', c: '' }
 ```css
 /** CSS */
 .someclass {
-  maxHeight: "200px"
-  transition: "0.3s linear all",
-  overflow: "auto",
-  backgroundColor: "white",
-  border: "1px solid lightgrey",
+  max-height: "200px";
+  transition: "0.3s linear all";
+  overflow: "auto";
+  backgroundcolor: "white";
+  border: "1px solid lightgrey";
 }
 ```
 
