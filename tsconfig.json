@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "jsx": "preserve",
     "moduleResolution": "Node",
     "module": "ESNext",
@@ -14,6 +14,8 @@
     "noUnusedParameters": true,
     "paths": {
       "components/*": ["src/components/*"],
+      "context/*": ["src/context/*"],
+      "types/*": ["src/types/*"],
       "three-js/*": ["src/three-js/*"],
       "mesh/*": ["src/mesh/*"],
       "data/*": ["src/data/*"]
@@ -27,6 +29,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
