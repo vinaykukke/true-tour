@@ -7,7 +7,7 @@ import { DEFAULT_DATA } from "../data";
 /** GLOBAL THREE JS VARIABLES */
 declare global {
   var scene: THREE.Scene;
-  var camera: THREE.Camera;
+  var camera: THREE.PerspectiveCamera;
   var renderer: THREE.WebGLRenderer;
   var controls: TOrbitContols;
   var labelRenderer: CSS2DRenderer;

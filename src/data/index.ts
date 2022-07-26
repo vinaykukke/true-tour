@@ -3,8 +3,10 @@ export enum DEFAULT_DATA {
   camera_fov = 65,
   camera_near = 1,
   camera_far = 400,
-  control_lock__min = 10,
-  control_lock__max = 50,
+  control_lock__min = 0,
+  control_lock__max = 0.1,
+  camera_zoom__min = 1,
+  camera_zoom__max = 10,
 }
 
 export const response = [

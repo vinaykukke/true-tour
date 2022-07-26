@@ -5,6 +5,7 @@ import Pano from "./components/Pano";
 import Hotspot from "./components/Hotspot";
 import { removeHotspot } from "./components/Hotspot";
 import { THotspotType } from "./types/hotspot";
+import { DEFAULT_DATA } from "./data";
 import "./App.scss";
 
 /** Selected / Draggable objects */
@@ -63,6 +64,18 @@ const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
   /** calculate pointer position in normalized device coordinates (-1 to +1) */
   moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   moveMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+};
+
+const handleZoom = (event: React.WheelEvent<HTMLDivElement>) => {
+  const zoom = camera.zoom;
+  const zoomIn = event.deltaY < 0 && zoom <= DEFAULT_DATA.camera_zoom__max;
+  const zoomOut = event.deltaY > 0 && zoom >= DEFAULT_DATA.camera_zoom__min;
+
+  if (zoomIn) camera.zoom = zoom + 0.2;
+  if (zoomOut) camera.zoom = zoom - 0.2;
+
+  /** Update the projection matrix */
+  camera.updateProjectionMatrix();
 };
 
 const dragObject = () => {
@@ -162,6 +175,7 @@ function App() {
         id="three-js__root"
         onClick={handleClick}
         onMouseMove={handleMouseMove}
+        onWheel={handleZoom}
       />
       <div className="hotspot__add" onClick={addHotspot()}>
         Add Hotspot
