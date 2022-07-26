@@ -16,6 +16,7 @@
       "components/*": ["src/components/*"],
       "context/*": ["src/context/*"],
       "types/*": ["src/types/*"],
+      "helpers/*": ["src/helpers/*"],
       "three-js/*": ["src/three-js/*"],
       "mesh/*": ["src/mesh/*"],
       "data/*": ["src/data/*"]

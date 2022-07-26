@@ -9,7 +9,7 @@ interface IPanoProps {
  * @param [img = string] Specify the image you want to be loaded.
  */
 const Pano = (props: IPanoProps) => {
-  const frustum = new THREE.Frustum();
+  // const frustum = new THREE.Frustum();
   const { img } = props;
   /** Texture */
   const loader = new THREE.TextureLoader();
@@ -38,18 +38,18 @@ const Pano = (props: IPanoProps) => {
     inFrustum: false,
   };
 
-  mesh.onBeforeRender = () => {
-    const matrix = new THREE.Matrix4().multiplyMatrices(
-      camera.projectionMatrix,
-      camera.matrixWorldInverse
-    );
-    /** Mesh is inView */
-    mesh.userData.inView = true;
+  // mesh.onBeforeRender = () => {
+  //   const matrix = new THREE.Matrix4().multiplyMatrices(
+  //     camera.projectionMatrix,
+  //     camera.matrixWorldInverse
+  //   );
+  //   /** Mesh is inView */
+  //   mesh.userData.inView = true;
 
-    frustum.setFromProjectionMatrix(matrix);
-    /** Indicates if the Mesh is in the scene but outside of the camera furstum */
-    mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
-  };
+  //   frustum.setFromProjectionMatrix(matrix);
+  //   /** Indicates if the Mesh is in the scene but outside of the camera furstum */
+  //   mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
+  // };
 
   return mesh;
 };

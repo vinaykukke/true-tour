@@ -4,12 +4,12 @@ import React, { useContext, useState } from "react";
 const ThreejsContext = React.createContext(null);
 const ThreejsUpdateContext = React.createContext(null);
 
-export const useThreejs = () => useContext(ThreejsContext);
-export const useThreejsUpdate = () => useContext(ThreejsUpdateContext);
+export const useThree = () => useContext(ThreejsContext);
+export const useUpdate = () => useContext(ThreejsUpdateContext);
 
 const ThreejsProvider = ({ children }) => {
   const [editRequests, setEditRequests] = useState(null);
-  const [selObj, setObj] = useState(null);
+  const [selectedObj, setSelectedObj] = useState(null);
   const [selIcon, setIcon] = useState(null);
   const [executions, setExecutions] = useState(null);
 
@@ -29,14 +29,14 @@ const ThreejsProvider = ({ children }) => {
   // }, [selObj]);
 
   const threeCxt = {
-    selObj,
+    selectedObj,
     selIcon,
     editRequests,
     executions,
   };
 
   const threeUpdate = {
-    setObj,
+    setSelectedObj,
     setIcon,
     setEditRequests,
     setExecutions,
