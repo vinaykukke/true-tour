@@ -48,7 +48,12 @@ const Tools = (props) => {
   };
 
   return (
-    <div className="toolbar">
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      className="toolbar"
+    >
       <Stack direction="row" spacing={1}>
         <IconButton
           className="hotspot__add"
@@ -75,7 +80,7 @@ const Tools = (props) => {
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
-    </div>
+    </Stack>
   );
 };
 
