@@ -20,6 +20,14 @@ function App() {
   const { setSelectedObj } = useUpdate();
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    /** Bounding rect for the canvas */
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    /** Offset values for the canvas */
+    const x = (event.clientX - rect.left) / renderer.domElement.clientWidth;
+    const y = (event.clientY - rect.top) / renderer.domElement.clientHeight;
+
+    /** Click types */
     const doubleClick = event.detail === 2;
     const singleClick = event.detail === 1;
 
@@ -30,8 +38,8 @@ function App() {
     }
 
     /** calculate pointer position in normalized device coordinates (-1 to +1) */
-    clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    clickMouse.x = x * 2 - 1;
+    clickMouse.y = -y * 2 + 1;
 
     /** Set the camera from which the ray should orginate and to what coordinates it should go to */
     raycaster.setFromCamera(clickMouse, camera);
@@ -65,9 +73,16 @@ function App() {
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    /** Bounding rect for the canvas */
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    /** Offset values for the canvas */
+    const x = (event.clientX - rect.left) / renderer.domElement.clientWidth;
+    const y = (event.clientY - rect.top) / renderer.domElement.clientHeight;
+
     /** calculate pointer position in normalized device coordinates (-1 to +1) */
-    moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    moveMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    moveMouse.x = x * 2 - 1;
+    moveMouse.y = -y * 2 + 1;
   };
 
   const handleZoom = (event: React.WheelEvent<HTMLDivElement>) => {
