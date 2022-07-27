@@ -87,32 +87,29 @@
   border: 2px solid rgba(0, 140, 255, 0.947);
 }
 
-.hotspot__add {
+.toolbar {
   position: absolute;
+  z-index: 10;
   top: 50px;
   left: 30px;
-  padding: 15px;
-  background-color: #61dafb;
-  cursor: pointer;
   border-radius: 5px;
+  background-color: #fff;
+  height: 60px;
+  width: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-.add__editRequest {
-  position: absolute;
-  top: 50px;
-  left: 310px;
-  padding: 15px;
-  background-color: #8061fb;
-  cursor: pointer;
-  border-radius: 5px;
+.hotspot__add {
+  width: 50px;
+  height: 50px;
 }
 
 .hotspot__delete {
-  position: absolute;
-  top: 50px;
-  left: 160px;
-  padding: 15px;
-  background-color: red;
-  cursor: pointer;
-  border-radius: 5px;
+  width: 50px;
+  height: 50px;
 }
