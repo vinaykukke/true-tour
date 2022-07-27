@@ -41,6 +41,7 @@ const Tools = (props) => {
     /** Remove the selected object from the scene */
     if (selectedObj) {
       selectedObj.parent.remove(selectedObj);
+      setHotspots(hotspots.filter((hs) => hs.uuid !== selectedObj.uuid));
       removeHotspot(selectedObj);
       setSelectedObj(null);
     }

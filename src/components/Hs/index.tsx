@@ -23,9 +23,8 @@ const Hotspot = (props: IProps) => {
   useEffect(() => {
     /** Adding the label to the Hotspot mesh */
     const label = new CSS2DObject(hsRef.current);
-    // label.onBeforeRender = (renderer) => console.log(renderer);
     mesh.add(label);
-  }, [mesh]);
+  }, []);
 
   useEffect(() => {
     const selectedObject = selectedObj && mesh.id === selectedObj.id;
@@ -85,24 +84,37 @@ const Hotspot = (props: IProps) => {
     return Tooltip;
   };
 
+  /**
+   * The className"hotspot__container" => root element for react to remove when hotspot is deleted.
+   * If you remove this container - react will throw the following Exception:
+   * "React DOMException: Failed to execute removeChild on Node".
+   *
+   * CSS2DObject() removes the Hotspot by directly manipulating the DOM and removing the root div.
+   * But in React's virtual DOM, the root div still exists! So when you "deleteHotspot()" React tries to remove it
+   * from the real DOM but since it's already gone, the error is thrown.
+   *
+   * https://stackoverflow.com/questions/54880669/react-domexception-failed-to-execute-removechild-on-node-the-node-to-be-re
+   */
   return (
-    <div
-      ref={hsRef}
-      className="hotspot hotspot__focus"
-      id={`hotspot__${mesh.uuid}`}
-      onMouseMove={onMouseMove}
-      tabIndex={tabIndex}
-    >
-      {renderHotspots()}
-      {showTooltip && (
-        <div
-          className="tooltiptext"
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
-        >
-          {renderTooltip()}
-        </div>
-      )}
+    <div className="hotspot__container">
+      <div
+        ref={hsRef}
+        className="hotspot hotspot__focus"
+        id={`hotspot__${mesh.uuid}`}
+        onMouseMove={onMouseMove}
+        tabIndex={tabIndex}
+      >
+        {renderHotspots()}
+        {showTooltip && (
+          <div
+            className="tooltiptext"
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+          >
+            {renderTooltip()}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
