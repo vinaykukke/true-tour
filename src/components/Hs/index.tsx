@@ -23,8 +23,9 @@ const Hotspot = (props: IProps) => {
   useEffect(() => {
     /** Adding the label to the Hotspot mesh */
     const label = new CSS2DObject(hsRef.current);
+    // label.onBeforeRender = (renderer) => console.log(renderer);
     mesh.add(label);
-  }, []);
+  }, [mesh]);
 
   useEffect(() => {
     const selectedObject = selectedObj && mesh.id === selectedObj.id;

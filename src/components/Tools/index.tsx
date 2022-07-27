@@ -1,5 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import AddIcon from "@mui/icons-material/Add";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import IconButton from "@mui/material/IconButton";
 import Hotspot from "src/components/Hotspot";
@@ -8,11 +11,15 @@ import { THotspotType } from "src/types/hotspot";
 import { getScreenCenter } from "src/helpers/screenCenter";
 import { useThree, useUpdate } from "src/context";
 import Hs from "src/components/Hs";
+import Type from "src/components/Type";
 
 const Tools = (props) => {
-  const threeCxt = useThree();
+  const { selectedObj } = useThree();
+  const disable = !Boolean(selectedObj);
   const { setSelectedObj } = useUpdate();
-  const [hotspots, setHotspots] = useState([]);
+  const [hotspots, setHotspots] = useState<
+    Mesh<SphereGeometry, MeshBasicMaterial>[]
+  >([]);
 
   const addHotspot = (type: THotspotType) => () => {
     /** https://stackoverflow.com/questions/11036106/three-js-projector-and-ray-objects */
@@ -32,8 +39,6 @@ const Tools = (props) => {
 
   const deleteHotspot = () => {
     /** Remove the selected object from the scene */
-    const { selectedObj } = threeCxt;
-    /** Remove the selected object from the scene */
     if (selectedObj) {
       selectedObj.parent.remove(selectedObj);
       removeHotspot(selectedObj);
@@ -43,20 +48,29 @@ const Tools = (props) => {
 
   return (
     <div className="toolbar">
-      <IconButton
-        className="hotspot__add"
-        aria-label="add"
-        onClick={addHotspot("right")}
-      >
-        <AddIcon />
-      </IconButton>
-      <IconButton
-        className="hotspot__delete"
-        aria-label="add"
-        onClick={deleteHotspot}
-      >
-        <DeleteForeverRoundedIcon />
-      </IconButton>
+      <Stack direction="row" spacing={1}>
+        <IconButton
+          className="hotspot__add"
+          aria-label="add"
+          color="primary"
+          onClick={addHotspot("right")}
+        >
+          <AddIcon />
+        </IconButton>
+        <IconButton
+          disabled={disable}
+          className="hotspot__delete"
+          aria-label="add"
+          color="error"
+          onClick={deleteHotspot}
+        >
+          <DeleteForeverRoundedIcon />
+        </IconButton>
+      </Stack>
+      <Type />
+      <Button size="large" aria-label="publish">
+        Publish
+      </Button>
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
