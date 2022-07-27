@@ -13,7 +13,11 @@ import { useThree, useUpdate } from "src/context";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
 
-const Tools = (props) => {
+interface IProps {
+  onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+const Tools = (props: IProps) => {
   const { selectedObj } = useThree();
   const disable = !Boolean(selectedObj);
   const { setSelectedObj } = useUpdate();
@@ -21,7 +25,7 @@ const Tools = (props) => {
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
 
-  const addHotspot = (type: THotspotType) => () => {
+  const addHotspot = (type?: THotspotType) => () => {
     /** https://stackoverflow.com/questions/11036106/three-js-projector-and-ray-objects */
     const center = getScreenCenter();
     const pano = scene.getObjectByName("mesh__pano");
@@ -40,9 +44,10 @@ const Tools = (props) => {
   const deleteHotspot = () => {
     /** Remove the selected object from the scene */
     if (selectedObj) {
+      const copy = Array.from(hotspots);
       selectedObj.parent.remove(selectedObj);
-      setHotspots(hotspots.filter((hs) => hs.uuid !== selectedObj.uuid));
       removeHotspot(selectedObj);
+      setHotspots(copy.filter((hs) => hs.uuid !== selectedObj.uuid));
       setSelectedObj(null);
     }
   };
@@ -59,7 +64,7 @@ const Tools = (props) => {
           className="hotspot__add"
           aria-label="add"
           color="primary"
-          onClick={addHotspot("right")}
+          onClick={addHotspot()}
         >
           <AddIcon />
         </IconButton>

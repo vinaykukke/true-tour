@@ -3,15 +3,16 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useThree } from "src/context";
+import { useThree, useUpdate } from "src/context";
 
 const Type = () => {
-  const { selectedObj } = useThree();
+  const { selectedObj, type } = useThree();
+  const { setType } = useUpdate();
   const disable = !Boolean(selectedObj);
-  const [type, setType] = useState("");
   const [open, setOpen] = useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setType(event.target.value);
+    selectedObj.userData.type = event.target.value;
   };
   const toggleOpen = () => setOpen((prev) => !prev);
 

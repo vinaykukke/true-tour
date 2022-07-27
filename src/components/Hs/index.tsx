@@ -6,14 +6,17 @@ import { IconDown, IconLeft, IconRight, IconUp } from "./HotspotElements";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
 
 interface IProps {
-  onMouseMove: () => void;
+  onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
   mesh: Mesh;
   tabIndex: number;
 }
 
 const Hotspot = (props: IProps) => {
   const { mesh, onMouseMove, tabIndex } = props;
-  // const { userData } = mesh;
+  const {
+    userData: { type },
+    children,
+  } = mesh;
   const hsRef = useRef(null);
   const { selectedObj } = useThree();
   const showTooltip = true;
@@ -21,10 +24,15 @@ const Hotspot = (props: IProps) => {
   const handleMouseOut = () => controls.enable();
 
   useEffect(() => {
+    /** Removing existing labels because react will replace them when the hotspot is deleted */
+    if (children.length > 0) {
+      children.forEach((child) => child.parent.remove(child));
+    }
+
     /** Adding the label to the Hotspot mesh */
     const label = new CSS2DObject(hsRef.current);
     mesh.add(label);
-  }, []);
+  }, [mesh, children]);
 
   useEffect(() => {
     const selectedObject = selectedObj && mesh.id === selectedObj.id;
@@ -37,7 +45,7 @@ const Hotspot = (props: IProps) => {
     }
   }, [selectedObj, mesh]);
 
-  const renderHotspots = (type = "right") => {
+  const renderHotspots = () => {
     let img = null;
 
     switch (type) {
@@ -65,7 +73,7 @@ const Hotspot = (props: IProps) => {
     return img;
   };
 
-  const renderTooltip = (type = "right") => {
+  const renderTooltip = () => {
     let Tooltip = null;
 
     switch (type) {

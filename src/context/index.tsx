@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 /** Threejs Context */
 const ThreejsContext = React.createContext(null);
@@ -11,28 +11,22 @@ const ThreejsProvider = ({ children }) => {
   const [editRequests, setEditRequests] = useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
   const [selIcon, setIcon] = useState(null);
+  const defaultType = selectedObj ? selectedObj.userData.type : "";
   const [executions, setExecutions] = useState(null);
+  const [type, setType] = useState(defaultType);
 
-  /** Puts the action Parameters data into the selected objects user data */
-  // useEffect(() => {
-  //   const { message, id, path, dataName, title } = actionParams;
-  //   if (selObj) {
-  //     selObj.userData = {
-  //       ...selObj.userData,
-  //       message,
-  //       title,
-  //       path,
-  //       id,
-  //       dataName,
-  //     };
-  //   }
-  // }, [selObj]);
+  /** Default type set */
+  useEffect(() => {
+    if (!selectedObj) setType("");
+    if (selectedObj) setType(selectedObj.userData.type);
+  }, [selectedObj]);
 
   const threeCxt = {
     selectedObj,
     selIcon,
     editRequests,
     executions,
+    type,
   };
 
   const threeUpdate = {
@@ -40,6 +34,7 @@ const ThreejsProvider = ({ children }) => {
     setIcon,
     setEditRequests,
     setExecutions,
+    setType,
   };
 
   return (
