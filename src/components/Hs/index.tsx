@@ -57,47 +57,28 @@ const Hotspot = (props: IProps) => {
     switch (type) {
       case "down":
         img = (
-          <ArrowCircleDownOutlinedIcon
-            style={{ color: "white", width: "52px", height: "52px" }}
-            fontSize="large"
-          />
+          <ArrowCircleDownOutlinedIcon className="icons" fontSize="large" />
         );
         break;
 
       case "left":
         img = (
-          <ArrowCircleLeftOutlinedIcon
-            style={{ color: "white", width: "52px", height: "52px" }}
-            fontSize="large"
-          />
+          <ArrowCircleLeftOutlinedIcon className="icons" fontSize="large" />
         );
         break;
 
       case "right":
         img = (
-          <ArrowCircleRightOutlinedIcon
-            style={{ color: "white", width: "52px", height: "52px" }}
-            fontSize="large"
-          />
+          <ArrowCircleRightOutlinedIcon className="icons" fontSize="large" />
         );
         break;
 
       case "up":
-        img = (
-          <ArrowCircleUpOutlinedIcon
-            style={{ color: "white", width: "52px", height: "52px" }}
-            fontSize="large"
-          />
-        );
+        img = <ArrowCircleUpOutlinedIcon className="icons" fontSize="large" />;
         break;
 
       case "info":
-        img = (
-          <InfoOutlinedIcon
-            style={{ color: "white", width: "52px", height: "52px" }}
-            fontSize="large"
-          />
-        );
+        img = <InfoOutlinedIcon className="icons" fontSize="large" />;
         break;
 
       default:

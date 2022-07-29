@@ -8,7 +8,7 @@
 
 .hotspot {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: #333;
   position: absolute; /* let us position them inside the container */
@@ -18,21 +18,29 @@
   font-size: 12px;
   user-select: none; /* don't let the text get selected */
   border-radius: 50%;
-  height: 48px;
-  width: 48px;
+  height: 52px;
+  width: 52px;
   z-index: 1;
 
   &[data-expand="true"] {
-    transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out,
+      height 0.3s ease-in-out;
 
     &:hover {
       width: 300px;
+      height: 60px;
       border-radius: 5px;
     }
   }
 
   &:focus {
     border: 2px solid rgba(0, 140, 255, 0.947);
+  }
+
+  .icons {
+    color: #fff;
+    width: 52px;
+    height: 52px;
   }
 
   /* Tooltip text */
@@ -108,8 +116,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
+  height: 50px;
   border-radius: 5px;
   background-color: #fff;
+  transition: width 0.3s ease-out;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
