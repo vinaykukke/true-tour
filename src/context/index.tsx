@@ -10,6 +10,7 @@ export const useUpdate = () => useContext(ThreejsUpdateContext);
 const ThreejsProvider = ({ children }) => {
   const [editRequests, setEditRequests] = useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
+  const [previewMode, togglePreviewMode] = useState(false);
   const [selIcon, setIcon] = useState(null);
   const defaultType = selectedObj ? selectedObj.userData.type : "";
   const [executions, setExecutions] = useState(null);
@@ -27,6 +28,7 @@ const ThreejsProvider = ({ children }) => {
     editRequests,
     executions,
     type,
+    previewMode,
   };
 
   const threeUpdate = {
@@ -35,6 +37,7 @@ const ThreejsProvider = ({ children }) => {
     setEditRequests,
     setExecutions,
     setType,
+    togglePreviewMode,
   };
 
   return (

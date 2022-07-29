@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Mesh } from "three";
+import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { useThree } from "src/context";
 import { IconDown, IconLeft, IconRight, IconUp } from "./HotspotElements";
@@ -18,8 +19,8 @@ const Hotspot = (props: IProps) => {
     children,
   } = mesh;
   const hsRef = useRef(null);
-  const { selectedObj } = useThree();
-  const showTooltip = true;
+  const { selectedObj, previewMode } = useThree();
+  const showTooltip = false;
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
 
@@ -65,8 +66,12 @@ const Hotspot = (props: IProps) => {
         img = <IconUp />;
         break;
 
+      case "info":
+        img = <IconUp />;
+        break;
+
       default:
-        img = <IconRight />;
+        img = <InfoTwoToneIcon style={{ color: "white" }} fontSize="large" />;
         break;
     }
 
@@ -107,10 +112,13 @@ const Hotspot = (props: IProps) => {
     <div className="hotspot__container">
       <div
         ref={hsRef}
+        data-preview={previewMode}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
         onMouseMove={onMouseMove}
         tabIndex={tabIndex}
+        onMouseOver={previewMode ? handleMouseOver : undefined}
+        onMouseOut={previewMode ? handleMouseOut : undefined}
       >
         {renderHotspots()}
         {showTooltip && (

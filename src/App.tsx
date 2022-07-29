@@ -4,8 +4,8 @@ import setup from "./three-js/setup";
 import Pano from "./components/Pano";
 import { DEFAULT_DATA } from "./data";
 import "./App.scss";
-import Tools from "./components/Tools";
-import { useUpdate } from "./context";
+import Toolbar from "./components/Toolbar";
+import { useUpdate, useThree } from "./context";
 
 /** Selected / Draggable objects */
 let draggableObject: THREE.Object3D;
@@ -17,6 +17,7 @@ const raycaster = new THREE.Raycaster();
 
 function App() {
   const rootRef = useRef(null);
+  const { previewMode } = useThree();
   const { setSelectedObj } = useUpdate();
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -53,7 +54,7 @@ function App() {
     >(scene.children);
     const obj = found.length > 0 && found[0].object;
 
-    if (obj.userData.draggable) {
+    if (!previewMode && obj.userData.draggable) {
       if (doubleClick) draggableObject = obj;
       setSelectedObj(obj);
     }
@@ -183,7 +184,7 @@ function App() {
         onMouseMove={handleMouseMove}
         onWheel={handleZoom}
       />
-      <Tools onMouseMove={handleMouseMove} />
+      <Toolbar onMouseMove={handleMouseMove} />
     </Suspense>
   );
 }

@@ -17,10 +17,10 @@ interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const Tools = (props: IProps) => {
-  const { selectedObj } = useThree();
+const Toolbar = (props: IProps) => {
+  const { selectedObj, previewMode } = useThree();
   const disable = !Boolean(selectedObj);
-  const { setSelectedObj } = useUpdate();
+  const { setSelectedObj, togglePreviewMode } = useUpdate();
   const [hotspots, setHotspots] = useState<
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
@@ -52,36 +52,47 @@ const Tools = (props: IProps) => {
     }
   };
 
+  const togglePreview = () => togglePreviewMode((prev) => !prev);
+
   return (
     <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      className="toolbar"
+      className={previewMode ? "toolbar toolbar__preview" : "toolbar"}
     >
-      <Stack direction="row" spacing={1}>
-        <IconButton
-          className="hotspot__add"
-          aria-label="add"
-          color="primary"
-          onClick={addHotspot()}
-        >
-          <AddIcon />
-        </IconButton>
-        <IconButton
-          disabled={disable}
-          className="hotspot__delete"
-          aria-label="add"
-          color="error"
-          onClick={deleteHotspot}
-        >
-          <DeleteForeverRoundedIcon />
-        </IconButton>
-      </Stack>
-      <Type />
-      <Button size="large" aria-label="publish">
-        Publish
+      {!previewMode && (
+        <>
+          <Stack direction="row" spacing={1}>
+            <IconButton
+              className="hotspot__add"
+              aria-label="add"
+              color="primary"
+              onClick={addHotspot()}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              disabled={disable}
+              className="hotspot__delete"
+              aria-label="add"
+              color="error"
+              onClick={deleteHotspot}
+            >
+              <DeleteForeverRoundedIcon />
+            </IconButton>
+          </Stack>
+          <Type />
+        </>
+      )}
+      <Button size="large" aria-label="preview" onClick={togglePreview}>
+        {previewMode ? "Exit" : "Preview"}
       </Button>
+      {previewMode && (
+        <Button size="large" aria-label="publish">
+          Publish
+        </Button>
+      )}
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
@@ -89,4 +100,4 @@ const Tools = (props: IProps) => {
   );
 };
 
-export default Tools;
+export default Toolbar;
