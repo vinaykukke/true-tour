@@ -131,7 +131,22 @@ const Hotspot = (props: IProps) => {
         onMouseOver={previewMode ? handleMouseOver : undefined}
         onMouseOut={previewMode ? handleMouseOut : undefined}
       >
-        {renderHotspots()}
+        <div className="hotspot__title">
+          {renderHotspots()}
+          {expand && <div className="title">Viceroy Los Cabos</div>}
+        </div>
+        <div className="hotspot__body">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero
+          corporis fugit cum. Aperiam ex quae sequi molestias omnis veritatis
+          eum nulla in nemo optio. Animi eos enim ipsum perferendis asperiores!
+          Dolorem voluptatum natus ipsa commodi mollitia dolor cumque excepturi
+          voluptates laborum repudiandae, vitae eos, dolorum voluptatem rem.
+          Eveniet iusto nemo doloribus temporibus minus libero laborum tempora
+          eum! Consequuntur, nihil consequatur! Ipsum illum quod autem
+          distinctio odio, eveniet id dicta quisquam libero quam eum cum,
+          architecto iste aliquid debitis. Asperiores velit laboriosam fugit
+          inventore numquam vitae natus dolorem temporibus iusto itaque.
+        </div>
         {showTooltip && (
           <div
             className="tooltiptext"
