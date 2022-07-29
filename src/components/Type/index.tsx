@@ -36,7 +36,7 @@ const Type = () => {
         <MenuItem value="left">Left</MenuItem>
         <MenuItem value="up">Up</MenuItem>
         <MenuItem value="down">Down</MenuItem>
-        <MenuItem value="Info">Info</MenuItem>
+        <MenuItem value="info">Info</MenuItem>
       </Select>
     </FormControl>
   );

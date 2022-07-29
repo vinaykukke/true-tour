@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Mesh } from "three";
-import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutlined";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import ArrowCircleUpOutlinedIcon from "@mui/icons-material/ArrowCircleUpOutlined";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { useThree } from "src/context";
-import { IconDown, IconLeft, IconRight, IconUp } from "./HotspotElements";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
 
 interface IProps {
@@ -21,6 +24,8 @@ const Hotspot = (props: IProps) => {
   const hsRef = useRef(null);
   const { selectedObj, previewMode } = useThree();
   const showTooltip = false;
+  const expand = previewMode && type === "info";
+
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
 
@@ -51,27 +56,52 @@ const Hotspot = (props: IProps) => {
 
     switch (type) {
       case "down":
-        img = <IconDown />;
+        img = (
+          <ArrowCircleDownOutlinedIcon
+            style={{ color: "white", width: "52px", height: "52px" }}
+            fontSize="large"
+          />
+        );
         break;
 
       case "left":
-        img = <IconLeft />;
+        img = (
+          <ArrowCircleLeftOutlinedIcon
+            style={{ color: "white", width: "52px", height: "52px" }}
+            fontSize="large"
+          />
+        );
         break;
 
       case "right":
-        img = <IconRight />;
+        img = (
+          <ArrowCircleRightOutlinedIcon
+            style={{ color: "white", width: "52px", height: "52px" }}
+            fontSize="large"
+          />
+        );
         break;
 
       case "up":
-        img = <IconUp />;
+        img = (
+          <ArrowCircleUpOutlinedIcon
+            style={{ color: "white", width: "52px", height: "52px" }}
+            fontSize="large"
+          />
+        );
         break;
 
       case "info":
-        img = <IconUp />;
+        img = (
+          <InfoOutlinedIcon
+            style={{ color: "white", width: "52px", height: "52px" }}
+            fontSize="large"
+          />
+        );
         break;
 
       default:
-        img = <InfoTwoToneIcon style={{ color: "white" }} fontSize="large" />;
+        img = <ArrowCircleRightOutlinedIcon />;
         break;
     }
 
@@ -112,7 +142,7 @@ const Hotspot = (props: IProps) => {
     <div className="hotspot__container">
       <div
         ref={hsRef}
-        data-preview={previewMode}
+        data-expand={expand}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
         onMouseMove={onMouseMove}

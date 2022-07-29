@@ -22,7 +22,7 @@
   width: 48px;
   z-index: 1;
 
-  &[data-preview="true"] {
+  &[data-expand="true"] {
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
 
     &:hover {
