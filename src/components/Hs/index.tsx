@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Mesh } from "three";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutlined";
-import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
-import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
-import ArrowCircleUpOutlinedIcon from "@mui/icons-material/ArrowCircleUpOutlined";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowDown,
+  faArrowRight,
+  faArrowLeft,
+  faArrowUp,
+  faInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { useThree } from "src/context";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
@@ -57,35 +60,27 @@ const Hotspot = (props: IProps) => {
 
     switch (type) {
       case "down":
-        img = (
-          <ArrowCircleDownOutlinedIcon className="icons" fontSize="large" />
-        );
+        img = <FontAwesomeIcon className="icons" icon={faArrowDown} />;
         break;
 
       case "left":
-        img = (
-          <ArrowCircleLeftOutlinedIcon className="icons" fontSize="large" />
-        );
+        img = <FontAwesomeIcon className="icons" icon={faArrowLeft} />;
         break;
 
       case "right":
-        img = (
-          <ArrowCircleRightOutlinedIcon className="icons" fontSize="large" />
-        );
+        img = <FontAwesomeIcon className="icons" icon={faArrowRight} />;
         break;
 
       case "up":
-        img = <ArrowCircleUpOutlinedIcon className="icons" fontSize="large" />;
+        img = <FontAwesomeIcon className="icons" icon={faArrowUp} />;
         break;
 
       case "info":
-        img = <InfoOutlinedIcon className="icons" fontSize="large" />;
+        img = <FontAwesomeIcon className="icons" icon={faInfo} />;
         break;
 
       default:
-        img = (
-          <ArrowCircleRightOutlinedIcon className="icons" fontSize="large" />
-        );
+        img = <FontAwesomeIcon className="icons" icon={faArrowRight} />;
         break;
     }
 

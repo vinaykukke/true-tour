@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
-import AddIcon from "@mui/icons-material/Add";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import IconButton from "@mui/material/IconButton";
 import Hotspot from "src/components/Hotspot";
 import { removeHotspot } from "src/helpers/dispose";
@@ -70,7 +70,7 @@ const Toolbar = (props: IProps) => {
               color="primary"
               onClick={addHotspot()}
             >
-              <AddIcon />
+              <FontAwesomeIcon icon={faPlus} />
             </IconButton>
             <IconButton
               disabled={disable}
@@ -79,7 +79,7 @@ const Toolbar = (props: IProps) => {
               color="error"
               onClick={deleteHotspot}
             >
-              <DeleteForeverRoundedIcon />
+              <FontAwesomeIcon icon={faTrash} />
             </IconButton>
           </Stack>
           <Type />
