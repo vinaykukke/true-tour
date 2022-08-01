@@ -29,9 +29,6 @@ const Type = () => {
         label="Type"
         onChange={handleChange}
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         <MenuItem value="right">Right</MenuItem>
         <MenuItem value="left">Left</MenuItem>
         <MenuItem value="up">Up</MenuItem>

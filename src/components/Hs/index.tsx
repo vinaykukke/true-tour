@@ -53,6 +53,7 @@ const Hotspot = (props: IProps) => {
 
   const renderHotspots = () => {
     let img = null;
+    console.log(type);
 
     switch (type) {
       case "down":
@@ -82,7 +83,9 @@ const Hotspot = (props: IProps) => {
         break;
 
       default:
-        img = <ArrowCircleRightOutlinedIcon />;
+        img = (
+          <ArrowCircleRightOutlinedIcon className="icons" fontSize="large" />
+        );
         break;
     }
 
