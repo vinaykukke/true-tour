@@ -26,6 +26,7 @@ import { getScreenCenter } from "src/helpers/screenCenter";
 import { useThree, useUpdate } from "src/context";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
+// import ImageRack from "src/components/ImageRack";
 import storage from "src/firebase";
 
 interface IProps {
@@ -211,6 +212,7 @@ const Toolbar = (props: IProps) => {
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
+      {/* <ImageRack /> */}
     </Stack>
   );
 };
