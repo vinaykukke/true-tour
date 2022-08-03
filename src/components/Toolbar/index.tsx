@@ -11,14 +11,15 @@ import {
 } from "firebase/storage";
 import { v4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faTrash,
+  faUpload,
+  faImages,
+} from "@fortawesome/free-solid-svg-icons";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
-import ListSubheader from "@mui/material/ListSubheader";
 import Hotspot from "src/components/Hotspot";
 import { removeHotspot } from "src/helpers/dispose";
 import { THotspotType } from "src/types/hotspot";
@@ -26,8 +27,8 @@ import { getScreenCenter } from "src/helpers/screenCenter";
 import { useThree, useUpdate } from "src/context";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
-// import ImageRack from "src/components/ImageRack";
 import storage from "src/firebase";
+import ImageRack from "src/components/ImageRack";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -37,6 +38,9 @@ const Toolbar = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
   const disable = !Boolean(selectedObj);
   const { setSelectedObj, togglePreviewMode } = useUpdate();
+  const [showImageRack, toggleImageRack] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  // const [success, setSuccess] = useState(false);
   const [hotspots, setHotspots] = useState<
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
@@ -70,6 +74,7 @@ const Toolbar = (props: IProps) => {
   };
 
   const togglePreview = () => togglePreviewMode((prev) => !prev);
+  const toggle = () => toggleImageRack((prev) => !prev);
 
   const onProgress = (snapshot: UploadTaskSnapshot) => {
     /**
@@ -88,61 +93,53 @@ const Toolbar = (props: IProps) => {
     }
   };
 
-  const onError = (error: StorageError) => {
+  const onError = (reject) => (error: StorageError) => {
     // Handle unsuccessful uploads
-    console.error("Image upload failed!", error);
+    reject(new Error("Image upload failed!", { cause: error }));
     alert(`Upload Failed! Please check the console for more info.`);
   };
 
-  const onSuccess = (uploadTask: UploadTask) => async () => {
-    const url = await getDownloadURL(uploadTask.snapshot.ref);
-    setUploadedImages((prev) => [...prev, url]);
-    console.log("File available at", url);
+  const onSuccess = (uploadTask: UploadTask, resolve) => () => {
+    resolve(getDownloadURL(uploadTask.snapshot.ref));
   };
 
-  const handleUpload = (e: React.ChangeEvent<any>) => {
+  const handleUpload = async (e: React.ChangeEvent<any>) => {
     const imagesArray: File[] = Array.from(e.target.files);
-    imagesArray.forEach(async (img) => {
+    const promises = [];
+    imagesArray.forEach((img) => {
       const imageRef = ref(storage, `images/${img.name}__${v4()}`);
       const uploadTask = uploadBytesResumable(imageRef, img);
-
-      /**
-       * Register three observers:
-       * 1. 'state_changed' observer, called any time the state changes
-       * 2. Error observer, called on failure
-       * 3. Completion observer, called on successful completion
-       */
-      uploadTask.on(
-        "state_changed",
-        onProgress,
-        onError,
-        onSuccess(uploadTask)
+      const promise = new Promise((resolve, reject) =>
+        /**
+         * Register three observers:
+         * 1. 'state_changed' observer, called any time the state changes
+         * 2. Error observer, called on failure
+         * 3. Completion observer, called on successful completion
+         */
+        uploadTask.on(
+          "state_changed",
+          onProgress,
+          onError(reject),
+          onSuccess(uploadTask, resolve)
+        )
       );
+      promises.push(promise);
     });
-  };
 
-  const renderImages = (item: string, i: number) => {
-    return (
-      <ImageListItem key={i}>
-        <img
-          src={`${item}?w=248&fit=crop&auto=format`}
-          srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
-          alt={`panorama ${i}`}
-          loading="lazy"
-        />
-        <ImageListItemBar title="picture" subtitle="Demo Images" />
-      </ImageListItem>
-    );
+    const urls = await Promise.all(promises);
+    setUploadedImages((prev) => [...prev, ...urls]);
   };
 
   useEffect(() => {
     const imageListRef = ref(storage, "images/");
     const fetch = async () => {
       const res = await listAll(imageListRef);
-      res.items.forEach(async (item) => {
-        const url = await getDownloadURL(item);
-        setUploadedImages((prev) => [...prev, url]);
-      });
+      const promises = res.items.map(
+        (item) =>
+          new Promise<string>((resolve) => resolve(getDownloadURL(item)))
+      );
+      const urls = await Promise.all(promises);
+      setUploadedImages(urls);
     };
     fetch();
   }, []);
@@ -183,6 +180,15 @@ const Toolbar = (props: IProps) => {
               <input hidden multiple accept="image/*" type="file" />
               <FontAwesomeIcon icon={faUpload} />
             </IconButton>
+            {uploadedImages.length > 0 && (
+              <IconButton
+                className="image__gallery"
+                aria-label="image gallery"
+                onClick={toggle}
+              >
+                <FontAwesomeIcon icon={faImages} />
+              </IconButton>
+            )}
           </Stack>
           <Type />
         </>
@@ -195,24 +201,12 @@ const Toolbar = (props: IProps) => {
           Publish
         </Button>
       )}
-      {uploadedImages.length > 0 && (
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <ImageList sx={{ width: 500, height: 450 }}>
-            <ImageListItem key="Subheader" cols={2}>
-              <ListSubheader component="div">Uploaded Images</ListSubheader>
-            </ImageListItem>
-            {uploadedImages.map(renderImages)}
-          </ImageList>
-        </Stack>
-      )}
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
-      {/* <ImageRack /> */}
+      {uploadedImages.length > 0 && showImageRack && (
+        <ImageRack images={uploadedImages} />
+      )}
     </Stack>
   );
 };
