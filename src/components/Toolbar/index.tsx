@@ -8,6 +8,8 @@ import {
   uploadBytesResumable,
   UploadTask,
   UploadTaskSnapshot,
+  getMetadata,
+  FullMetadata,
 } from "firebase/storage";
 import { v4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,19 +39,23 @@ interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
+interface IUploadedImage {
+  metaData: FullMetadata;
+  url: string;
+}
+
 const Toolbar = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
   const disable = !Boolean(selectedObj);
   const { setSelectedObj, togglePreviewMode } = useUpdate();
   const [showImageRack, toggleImageRack] = useState(false);
-  //@ts-ignore
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const icon = success ? faCheck : faUpload;
   const [hotspots, setHotspots] = useState<
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
 
   const addHotspot = (type?: THotspotType) => () => {
     /** https://stackoverflow.com/questions/11036106/three-js-projector-and-ray-objects */
@@ -104,20 +110,25 @@ const Toolbar = (props: IProps) => {
     alert(`Upload Failed! Please check the console for more info.`);
   };
 
-  const onSuccess = (uploadTask: UploadTask, resolve) => () => {
-    resolve(getDownloadURL(uploadTask.snapshot.ref));
+  const onSuccess = (uploadTask: UploadTask, resolve) => async () => {
+    resolve({
+      url: await getDownloadURL(uploadTask.snapshot.ref),
+      metaData: await getMetadata(uploadTask.snapshot.ref),
+    });
   };
 
   const handleUpload = async (e: React.ChangeEvent<any>) => {
     const imagesArray: File[] = Array.from(e.target.files);
-    const promises: Promise<string>[] = [];
+    const promises: Promise<IUploadedImage>[] = [];
     /** Show loading indicator */
     setLoading(true);
 
     imagesArray.forEach((img) => {
       const imageRef = ref(storage, `images/${img.name}__${v4()}`);
-      const uploadTask = uploadBytesResumable(imageRef, img);
-      const promise = new Promise<string>((resolve, reject) =>
+      const uploadTask = uploadBytesResumable(imageRef, img, {
+        customMetadata: { name: img.name, title: "Hotel" },
+      });
+      const promise = new Promise<IUploadedImage>((resolve, reject) =>
         /**
          * Register three observers:
          * 1. 'state_changed' observer, called any time the state changes
@@ -149,7 +160,12 @@ const Toolbar = (props: IProps) => {
       const res = await listAll(imageListRef);
       const promises = res.items.map(
         (item) =>
-          new Promise<string>((resolve) => resolve(getDownloadURL(item)))
+          new Promise<IUploadedImage>(async (resolve) =>
+            resolve({
+              url: await getDownloadURL(item),
+              metaData: await getMetadata(item),
+            })
+          )
       );
       const urls = await Promise.all(promises);
       setUploadedImages(urls);
@@ -217,8 +233,11 @@ const Toolbar = (props: IProps) => {
       {hotspots.map((hs, i) => (
         <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
       ))}
-      {uploadedImages.length > 0 && showImageRack && (
-        <ImageRack images={uploadedImages} />
+      {!previewMode && uploadedImages.length > 0 && showImageRack && (
+        <ImageRack
+          images={uploadedImages}
+          setUploadedImages={setUploadedImages}
+        />
       )}
       {loading && (
         <Box className="loading__indicator">
