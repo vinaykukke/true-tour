@@ -16,8 +16,11 @@ import {
   faTrash,
   faUpload,
   faImages,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Hotspot from "src/components/Hotspot";
@@ -39,8 +42,10 @@ const Toolbar = (props: IProps) => {
   const disable = !Boolean(selectedObj);
   const { setSelectedObj, togglePreviewMode } = useUpdate();
   const [showImageRack, toggleImageRack] = useState(false);
-  // const [loading, setLoading] = useState(false);
-  // const [success, setSuccess] = useState(false);
+  //@ts-ignore
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const icon = success ? faCheck : faUpload;
   const [hotspots, setHotspots] = useState<
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
@@ -82,7 +87,7 @@ const Toolbar = (props: IProps) => {
      * Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
      */
     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log("Upload is " + progress + "% done");
+    if (progress === 100) console.log("Upload is " + progress + "% done");
     switch (snapshot.state) {
       case "paused":
         console.log("Upload is paused");
@@ -105,11 +110,14 @@ const Toolbar = (props: IProps) => {
 
   const handleUpload = async (e: React.ChangeEvent<any>) => {
     const imagesArray: File[] = Array.from(e.target.files);
-    const promises = [];
+    const promises: Promise<string>[] = [];
+    /** Show loading indicator */
+    setLoading(true);
+
     imagesArray.forEach((img) => {
       const imageRef = ref(storage, `images/${img.name}__${v4()}`);
       const uploadTask = uploadBytesResumable(imageRef, img);
-      const promise = new Promise((resolve, reject) =>
+      const promise = new Promise<string>((resolve, reject) =>
         /**
          * Register three observers:
          * 1. 'state_changed' observer, called any time the state changes
@@ -127,7 +135,12 @@ const Toolbar = (props: IProps) => {
     });
 
     const urls = await Promise.all(promises);
-    setUploadedImages((prev) => [...prev, ...urls]);
+    if (urls.length > 0) {
+      setLoading(false);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
+      setUploadedImages((prev) => [...prev, ...urls]);
+    }
   };
 
   useEffect(() => {
@@ -178,7 +191,7 @@ const Toolbar = (props: IProps) => {
               onChange={handleUpload}
             >
               <input hidden multiple accept="image/*" type="file" />
-              <FontAwesomeIcon icon={faUpload} />
+              <FontAwesomeIcon icon={icon} color={success ? "green" : ""} />
             </IconButton>
             {uploadedImages.length > 0 && (
               <IconButton
@@ -206,6 +219,11 @@ const Toolbar = (props: IProps) => {
       ))}
       {uploadedImages.length > 0 && showImageRack && (
         <ImageRack images={uploadedImages} />
+      )}
+      {loading && (
+        <Box className="loading__indicator">
+          <LinearProgress />
+        </Box>
       )}
     </Stack>
   );

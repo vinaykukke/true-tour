@@ -21,7 +21,7 @@ const ImageRack = (props) => {
 
   return (
     <div className="image__rack">
-      <ImageList sx={{ height: 450 }}>
+      <ImageList sx={{ height: 250 }}>
         <ImageListItem key="Subheader" cols={2}>
           <ListSubheader component="div">Uploaded Images</ListSubheader>
         </ImageListItem>
