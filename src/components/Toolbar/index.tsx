@@ -15,7 +15,6 @@ import { v4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
-  faTrash,
   faUpload,
   faImages,
   faCheck,
@@ -46,7 +45,6 @@ interface IUploadedImage {
 
 const Toolbar = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
-  const disable = !Boolean(selectedObj);
   const { setSelectedObj, togglePreviewMode } = useUpdate();
   const [showImageRack, toggleImageRack] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,6 +79,11 @@ const Toolbar = (props: IProps) => {
       removeHotspot(selectedObj);
       setHotspots(copy.filter((hs) => hs.uuid !== selectedObj.uuid));
       setSelectedObj(null);
+      /**
+       * Controls are disabled when the you hover the delete button.
+       * Re-enable it once the hotspot is deleted.
+       */
+      controls.enable();
     }
   };
 
@@ -192,15 +195,6 @@ const Toolbar = (props: IProps) => {
               <FontAwesomeIcon icon={faPlus} />
             </IconButton>
             <IconButton
-              disabled={disable}
-              className="hotspot__delete"
-              aria-label="delete"
-              color="error"
-              onClick={deleteHotspot}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </IconButton>
-            <IconButton
               className="upload__image"
               aria-label="upload picture"
               component="label"
@@ -231,7 +225,13 @@ const Toolbar = (props: IProps) => {
         </Button>
       )}
       {hotspots.map((hs, i) => (
-        <Hs onMouseMove={props.onMouseMove} mesh={hs} key={i} tabIndex={i} />
+        <Hs
+          onMouseMove={props.onMouseMove}
+          deleteHotspot={deleteHotspot}
+          mesh={hs}
+          key={i}
+          tabIndex={i}
+        />
       ))}
       {!previewMode && uploadedImages.length > 0 && showImageRack && (
         <ImageRack

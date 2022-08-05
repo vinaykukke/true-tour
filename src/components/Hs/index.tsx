@@ -7,15 +7,19 @@ import {
   faArrowLeft,
   faArrowUp,
   faInfo,
+  faTrash,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { useThree } from "src/context";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
+import "./styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
   mesh: Mesh;
   tabIndex: number;
+  deleteHotspot: () => void;
 }
 
 const Hotspot = (props: IProps) => {
@@ -27,6 +31,8 @@ const Hotspot = (props: IProps) => {
   const hsRef = useRef(null);
   const { selectedObj, previewMode } = useThree();
   const showTooltip = false;
+  const showTools =
+    !previewMode && Boolean(selectedObj) && mesh.id === selectedObj.id;
   const expand = previewMode && type === "info";
 
   const handleMouseOver = () => controls.disable();
@@ -151,6 +157,20 @@ const Hotspot = (props: IProps) => {
             onMouseOut={handleMouseOut}
           >
             {renderTooltip()}
+          </div>
+        )}
+        {showTools && (
+          <div
+            className="hotspot__edit_tools"
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+          >
+            <div className="hotspot__edit_icon" onClick={props.deleteHotspot}>
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
+            <div className="hotspot__edit_icon">
+              <FontAwesomeIcon icon={faPen} />
+            </div>
           </div>
         )}
       </div>

@@ -1,0 +1,159 @@
+.hotspot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  position: absolute; /* let us position them inside the container */
+  left: 0; /* make their default position the top left of the container */
+  top: 0;
+  cursor: pointer; /* change the cursor to a hand when over us */
+  font-size: 12px;
+  user-select: none; /* don't let the text get selected */
+  border-radius: 50%;
+  height: 52px;
+  width: 52px;
+  z-index: 1;
+  color: white;
+
+  &[data-expand="true"] {
+    transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out,
+      height 0.3s ease-in-out;
+
+    &:hover {
+      width: 300px;
+      border-radius: 5px;
+
+      .hotspot__title {
+        .title {
+          visibility: visible;
+          font-size: 20px;
+        }
+      }
+
+      .hotspot__body {
+        visibility: visible;
+        overflow-y: scroll;
+        font-size: 16px;
+        padding: 10px;
+        transform: perspective(200px) rotateX(0deg);
+        transition: transform 0.3s 0.3s, visibility 0s 0s;
+      }
+
+      .icon {
+        left: 10px;
+      }
+    }
+  }
+
+  .hotspot__body {
+    position: absolute;
+    top: 53px;
+    visibility: hidden;
+    overflow: hidden;
+    height: 150px;
+    font-size: 0px;
+    background-color: #505050;
+    transform: perspective(200px) rotateX(-89.999deg);
+    transform-origin: 50% 0 0;
+    transition: transform 0.3s, visibility 0s 0.3s;
+    user-select: text;
+    border-radius: 5px;
+  }
+
+  .hotspot__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    .title {
+      visibility: hidden;
+      width: 100%;
+      margin: 0 15px;
+      font-size: 0px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
+  &:focus {
+    border: 2px solid rgba(0, 140, 255, 0.947);
+  }
+
+  .icons {
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 9px;
+    z-index: 2;
+    transition: all 0.3s ease-in-out;
+
+    &[data-icon="info"] {
+      top: 7px;
+    }
+  }
+
+  /* Tooltip text */
+  .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #fff;
+    color: #000;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 50px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 10;
+  }
+
+  /* Show the tooltip text when you mouse over the tooltip container */
+  &:hover {
+    .tooltiptext {
+      visibility: visible;
+    }
+  }
+
+  .hotspot__label {
+    color: white;
+  }
+
+  /* Tooltip container */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  }
+
+  .hotspot__edit_tools {
+    position: absolute;
+    left: 70px;
+
+    .hotspot__edit_icon {
+      width: 25px;
+      height: 25px;
+      background-color: #605f5f;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin: 15px 0;
+    }
+  }
+}
+
+.hotspot__focus {
+  border: 2px solid rgba(0, 140, 255, 0.947);
+}
+
+.hotspot__container {
+  display: none;
+}
