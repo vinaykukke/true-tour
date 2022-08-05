@@ -1,0 +1,51 @@
+.toolbar {
+  position: absolute;
+  padding: 5px 10px;
+  z-index: 10;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: width 0.3s ease-out;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+  .toolbar__wrapper {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.toolbar__preview {
+    width: 15%;
+  }
+}
+
+.hotspot__add {
+  width: 50px;
+  height: 50px;
+  background-color: rgba($color: #1976d2, $alpha: 0.7);
+}
+
+.hotspot__delete {
+  width: 50px;
+  height: 50px;
+}
+
+.upload__image,
+.image__gallery {
+  width: 50px;
+  height: 50px;
+}
+
+.loading__indicator {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}

@@ -33,6 +33,7 @@ import Hs from "src/components/Hs";
 import Type from "src/components/Type";
 import storage from "src/firebase";
 import ImageRack from "src/components/ImageRack";
+import "./styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
