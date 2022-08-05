@@ -232,6 +232,7 @@ const Toolbar = (props: IProps) => {
           mesh={hs}
           key={i}
           tabIndex={i}
+          scenes={uploadedImages}
         />
       ))}
       {!previewMode && uploadedImages.length > 0 && showImageRack && (

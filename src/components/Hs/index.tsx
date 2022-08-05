@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Mesh } from "three";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { FullMetadata } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
@@ -10,8 +12,9 @@ import {
   faTrash,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { useThree } from "src/context";
+import SceneList from "src/components/SceneList";
+import InfoEdit from "src/components/InfoEdit";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
 import "./styles.scss";
 
@@ -20,6 +23,12 @@ interface IProps {
   mesh: Mesh;
   tabIndex: number;
   deleteHotspot: () => void;
+  scenes: IUploadedImage[];
+}
+
+interface IUploadedImage {
+  metaData: FullMetadata;
+  url: string;
 }
 
 const Hotspot = (props: IProps) => {
@@ -111,6 +120,29 @@ const Hotspot = (props: IProps) => {
     return Tooltip;
   };
 
+  const renderEditTooltip = () => {
+    let Tooltip = null;
+
+    switch (type) {
+      case "left":
+      case "right":
+      case "down":
+      case "up":
+        Tooltip = <SceneList scenes={props.scenes} />;
+        break;
+
+      case "info":
+        Tooltip = <InfoEdit />;
+        break;
+
+      default:
+        Tooltip = <SceneList scenes={props.scenes} />;
+        break;
+    }
+
+    return Tooltip;
+  };
+
   /**
    * The className"hotspot__container" => root element for react to remove when hotspot is deleted.
    * If you remove this container - react will throw the following Exception:
@@ -165,11 +197,14 @@ const Hotspot = (props: IProps) => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
           >
+            <div className="hotspot__edit_icon hotspot__edit">
+              <FontAwesomeIcon icon={faPen} />
+              <div className="hotspot__edit_tooltiptext" data-type={type}>
+                {renderEditTooltip()}
+              </div>
+            </div>
             <div className="hotspot__edit_icon" onClick={props.deleteHotspot}>
               <FontAwesomeIcon icon={faTrash} />
-            </div>
-            <div className="hotspot__edit_icon">
-              <FontAwesomeIcon icon={faPen} />
             </div>
           </div>
         )}

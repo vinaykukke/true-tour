@@ -99,19 +99,42 @@
   }
 
   /* Tooltip text */
-  .tooltiptext {
+  .tooltiptext,
+  .hotspot__edit_tooltiptext {
     visibility: hidden;
-    width: 120px;
-    background-color: #fff;
+    min-width: 160px;
+    max-width: 300px;
+    background-color: #00000096;
     color: #000;
     text-align: center;
-    padding: 5px 0;
+    padding: 15px;
     border-radius: 6px;
-    bottom: 50px;
+    bottom: 85px;
 
     /* Position the tooltip text */
     position: absolute;
     z-index: 10;
+
+    &[data-type="info"] {
+      width: 300px;
+    }
+
+    &::after {
+      content: " ";
+      position: absolute;
+      top: 100%; /* At the bottom of the tooltip */
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #00000096 transparent transparent transparent;
+    }
+  }
+
+  .hotspot__edit:hover {
+    .hotspot__edit_tooltiptext {
+      visibility: visible;
+    }
   }
 
   /* Show the tooltip text when you mouse over the tooltip container */
