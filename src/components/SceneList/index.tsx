@@ -21,15 +21,18 @@ interface IUploadedImage {
 const SceneList = (props: IProps) => {
   const { targetScene, selectedObj } = useThree();
   const { setTargetScene } = useUpdate();
+  const noScenes = props.scenes.length === 0;
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTargetScene((event.target as HTMLInputElement).value);
     selectedObj.userData.targetScene = event.target.value;
+    selectedObj.userData.sceneId = event.target.parentElement.dataset.id;
+    selectedObj.userData.sceneName = event.target.parentElement.dataset.name;
   };
 
   return (
     <FormControl>
       <FormLabel className="form__label" id="select__target_scene">
-        Select Target Scene
+        {noScenes ? "Upload a scene from the toolbar" : "Select Target Scene"}
       </FormLabel>
       <RadioGroup
         aria-labelledby="select__target_scene"
@@ -42,7 +45,13 @@ const SceneList = (props: IProps) => {
             sx={{ color: "white" }}
             key={i}
             value={scene.url}
-            control={<Radio className="radio__button" />}
+            control={
+              <Radio
+                className="radio__button"
+                data-id={scene.metaData.customMetadata.uuid}
+                data-name={scene.metaData.customMetadata.name}
+              />
+            }
             label={scene.metaData.customMetadata.name}
           />
         ))}

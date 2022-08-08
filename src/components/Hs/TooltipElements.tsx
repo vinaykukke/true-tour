@@ -1,8 +1,3 @@
-export const SceneTooltip = ({ title = "Test", message = "Test Message" }) => (
-  <>
-    {title && <p>{title}</p>}
-    {message && <p>{message}</p>}
-  </>
-);
+export const SceneTooltip = ({ name = "Default Scene Name" }) => <p>{name}</p>;
 
 export const DefaultTooltip = () => <div>Default Tooltip</div>;

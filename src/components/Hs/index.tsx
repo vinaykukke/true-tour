@@ -38,9 +38,8 @@ const Hotspot = (props: IProps) => {
     children,
   } = mesh;
   const hsRef = useRef(null);
-
   const { selectedObj, previewMode, infoBody, infoTitle } = useThree();
-  const showTooltip = false;
+  const showTooltip = previewMode && type !== "info";
   const showTools =
     !previewMode && Boolean(selectedObj) && mesh.id === selectedObj.id;
   const expand = previewMode && type === "info";
@@ -104,13 +103,14 @@ const Hotspot = (props: IProps) => {
 
   const renderTooltip = () => {
     let Tooltip = null;
+    const name = mesh.userData.sceneName;
 
     switch (type) {
       case "left":
       case "right":
       case "down":
       case "up":
-        Tooltip = <SceneTooltip />;
+        Tooltip = <SceneTooltip name={name} />;
         break;
 
       default:

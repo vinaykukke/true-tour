@@ -128,9 +128,10 @@ const Toolbar = (props: IProps) => {
     setLoading(true);
 
     imagesArray.forEach((img) => {
-      const imageRef = ref(storage, `images/${img.name}__${v4()}`);
+      const uuid = v4();
+      const imageRef = ref(storage, `images/${img.name}__${uuid}`);
       const uploadTask = uploadBytesResumable(imageRef, img, {
-        customMetadata: { name: img.name, title: "Hotel" },
+        customMetadata: { name: img.name, title: "Hotel", uuid },
       });
       const promise = new Promise<IUploadedImage>((resolve, reject) =>
         /**
