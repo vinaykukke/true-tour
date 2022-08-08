@@ -1,15 +1,41 @@
 import TextField from "@mui/material/TextField";
+import { useEffect, useState } from "react";
 import { useUpdate, useThree } from "src/context";
 import "./styles.scss";
 
 const InfoEdit = () => {
-  const { infoTitle, infoBody } = useThree();
+  const [body, setBody] = useState("");
+  const [title, setTitle] = useState("");
+  const { infoTitle, infoBody, selectedObj } = useThree();
   const { setInfoTitle, setInfoBody } = useUpdate();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const title = event.target.id === "info__hotspot_title";
+    const body = event.target.id === "info__hotspot_body";
     const value = event.target.value;
-    title ? setInfoTitle(value) : setInfoBody(value);
+
+    if (title) {
+      setInfoTitle(value);
+      selectedObj.userData.infoTitle = value;
+    }
+
+    if (body) {
+      setInfoBody(value);
+      selectedObj.userData.infoBody = value;
+    }
   };
+
+  useEffect(() => {
+    const { userData } = selectedObj;
+    const show = userData.infoBody && userData.infoTitle;
+
+    if (show) {
+      setBody(userData.infoBody);
+      setTitle(userData.infoTitle);
+    } else {
+      setBody("");
+      setTitle("");
+    }
+  }, [selectedObj]);
 
   return (
     <>
@@ -19,7 +45,7 @@ const InfoEdit = () => {
         fullWidth
         id="info__hotspot_title"
         label="Title"
-        value={infoTitle}
+        value={title ? title : infoTitle}
         onChange={handleChange}
       />
       <TextField
@@ -30,7 +56,7 @@ const InfoEdit = () => {
         label="Body"
         multiline
         maxRows={4}
-        value={infoBody}
+        value={body ? body : infoBody}
         onChange={handleChange}
       />
     </>

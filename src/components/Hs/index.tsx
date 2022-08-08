@@ -39,11 +39,15 @@ const Hotspot = (props: IProps) => {
     children,
   } = mesh;
   const hsRef = useRef(null);
-  const { selectedObj, previewMode, infoBody, infoTitle } = useThree();
+  const { selectedObj, previewMode } = useThree();
   const showTooltip = previewMode && type !== "info";
   const showTools =
     !previewMode && Boolean(selectedObj) && mesh.id === selectedObj.id;
-  const expand = previewMode && type === "info";
+  const expand =
+    previewMode &&
+    type === "info" &&
+    Boolean(mesh.userData?.infoTitle) &&
+    Boolean(mesh.userData?.infoBody);
 
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
@@ -171,9 +175,11 @@ const Hotspot = (props: IProps) => {
       >
         <div className="hotspot__title">
           {renderHotspots()}
-          {expand && <div className="title">{infoTitle}</div>}
+          {expand && <div className="title">{mesh.userData.infoTitle}</div>}
         </div>
-        <div className="hotspot__body">{infoBody}</div>
+        {expand && (
+          <div className="hotspot__body">{mesh.userData.infoBody}</div>
+        )}
         {showTooltip && (
           <div
             className="tooltiptext"

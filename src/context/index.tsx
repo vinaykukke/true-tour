@@ -8,14 +8,12 @@ export const useThree = () => useContext(ThreejsContext);
 export const useUpdate = () => useContext(ThreejsUpdateContext);
 
 const ThreejsProvider = ({ children }) => {
-  const [editRequests, setEditRequests] = useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
   const [previewMode, togglePreviewMode] = useState(false);
   const [infoTitle, setInfoTitle] = useState("");
   const [infoBody, setInfoBody] = useState("");
   const [targetScene, setTargetScene] = useState("");
   const defaultType = selectedObj ? selectedObj.userData.type : "";
-  const [executions, setExecutions] = useState(null);
   const [type, setType] = useState(defaultType);
 
   /** Default type set */
@@ -28,8 +26,6 @@ const ThreejsProvider = ({ children }) => {
     selectedObj,
     infoBody,
     infoTitle,
-    editRequests,
-    executions,
     targetScene,
     type,
     previewMode,
@@ -39,8 +35,6 @@ const ThreejsProvider = ({ children }) => {
     setSelectedObj,
     setInfoTitle,
     setInfoBody,
-    setEditRequests,
-    setExecutions,
     setType,
     setTargetScene,
     togglePreviewMode,

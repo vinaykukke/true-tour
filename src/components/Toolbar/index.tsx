@@ -47,7 +47,13 @@ interface IUploadedImage {
 
 const Toolbar = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
-  const { setSelectedObj, togglePreviewMode } = useUpdate();
+  const {
+    setSelectedObj,
+    togglePreviewMode,
+    setInfoTitle,
+    setInfoBody,
+    setTargetScene,
+  } = useUpdate();
   const [showImageRack, toggleImageRack] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -69,6 +75,9 @@ const Toolbar = (props: IProps) => {
 
       setHotspots((prev) => [...prev, hs]);
       setSelectedObj(hs);
+      setInfoTitle("");
+      setInfoBody("");
+      setTargetScene("");
 
       /** Converting to the pano's local system before adding it to the scene */
       pano.worldToLocal(hs.position);
