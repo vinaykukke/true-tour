@@ -20,6 +20,7 @@ import "./styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   mesh: Mesh;
   tabIndex: number;
   deleteHotspot: () => void;
@@ -32,7 +33,7 @@ interface IUploadedImage {
 }
 
 const Hotspot = (props: IProps) => {
-  const { mesh, onMouseMove, tabIndex } = props;
+  const { mesh, onMouseMove, tabIndex, onClick } = props;
   const {
     userData: { type },
     children,
@@ -162,7 +163,8 @@ const Hotspot = (props: IProps) => {
         data-expand={expand}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
-        onMouseMove={onMouseMove}
+        onMouseMove={!previewMode ? onMouseMove : undefined}
+        onClick={previewMode ? onClick : undefined}
         tabIndex={tabIndex}
         onMouseOver={previewMode ? handleMouseOver : undefined}
         onMouseOut={previewMode ? handleMouseOut : undefined}

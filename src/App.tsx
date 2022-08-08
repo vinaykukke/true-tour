@@ -59,6 +59,29 @@ function App() {
       setSelectedObj(obj);
     }
 
+    if (previewMode && obj.name === "mesh__hotspot") {
+      const executable = obj.userData.executable;
+      const targetScene = obj.userData.targetScene;
+      const execute = executable && Boolean(targetScene);
+
+      if (execute) {
+        /** Get all the mesh */
+        const pano = Pano({
+          img: targetScene,
+        });
+        /** Set the position of the pano */
+        pano.position.set(0, 0, DEFAULT_DATA.pano_radius * 5);
+
+        /** Add to scene */
+        scene.add(pano); // World Space
+
+        controls.unlock();
+        camera.position.setZ(pano.position.z + 0.1);
+        controls.target.copy(pano.position.clone());
+        controls.lock();
+      }
+    }
+
     /** Clear selectedObject once focus is shifted from hotspot */
     if (obj.name === "mesh__pano") {
       /** Removes the focus of newly added hotspot */
@@ -184,7 +207,7 @@ function App() {
         onMouseMove={handleMouseMove}
         onWheel={handleZoom}
       />
-      <Toolbar onMouseMove={handleMouseMove} />
+      <Toolbar onMouseMove={handleMouseMove} onClick={handleClick} />
     </Suspense>
   );
 }

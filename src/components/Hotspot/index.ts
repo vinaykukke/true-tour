@@ -13,7 +13,6 @@ const material = new THREE.MeshBasicMaterial();
  */
 const Hotspot = (props?: IHotspotProps) => {
   const executable = EXECUTABLES.includes(props.type);
-  const defaultExecution = { image: "", targetView: new THREE.Vector3() };
 
   /** Create mesh */
   const mesh = new THREE.Mesh(geometry, material);
@@ -23,7 +22,6 @@ const Hotspot = (props?: IHotspotProps) => {
     draggable: true,
     new: props.newHotspot ? true : false,
     executable,
-    execution: props.execution ? props.execution : defaultExecution,
   };
   mesh.visible = false;
   mesh.name = "mesh__hotspot";
