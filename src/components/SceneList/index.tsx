@@ -1,10 +1,10 @@
-import { useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { FullMetadata } from "firebase/storage";
+import { useThree, useUpdate } from "src/context";
 import "./styles.scss";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -19,10 +19,11 @@ interface IUploadedImage {
 }
 
 const SceneList = (props: IProps) => {
-  const [value, setValue] = useState("");
-
+  const { targetScene, selectedObj } = useThree();
+  const { setTargetScene } = useUpdate();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    setTargetScene((event.target as HTMLInputElement).value);
+    selectedObj.userData.targetScene = event.target.value;
   };
 
   return (
@@ -32,7 +33,7 @@ const SceneList = (props: IProps) => {
       </FormLabel>
       <RadioGroup
         aria-labelledby="select__target_scene"
-        value={value}
+        value={targetScene}
         onChange={handleChange}
         name="radio-buttons-group"
       >

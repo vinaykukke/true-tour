@@ -11,7 +11,9 @@ const ThreejsProvider = ({ children }) => {
   const [editRequests, setEditRequests] = useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
   const [previewMode, togglePreviewMode] = useState(false);
-  const [selIcon, setIcon] = useState(null);
+  const [infoTitle, setInfoTitle] = useState("");
+  const [infoBody, setInfoBody] = useState("");
+  const [targetScene, setTargetScene] = useState("");
   const defaultType = selectedObj ? selectedObj.userData.type : "";
   const [executions, setExecutions] = useState(null);
   const [type, setType] = useState(defaultType);
@@ -24,19 +26,23 @@ const ThreejsProvider = ({ children }) => {
 
   const threeCxt = {
     selectedObj,
-    selIcon,
+    infoBody,
+    infoTitle,
     editRequests,
     executions,
+    targetScene,
     type,
     previewMode,
   };
 
   const threeUpdate = {
     setSelectedObj,
-    setIcon,
+    setInfoTitle,
+    setInfoBody,
     setEditRequests,
     setExecutions,
     setType,
+    setTargetScene,
     togglePreviewMode,
   };
 
