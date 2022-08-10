@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./login.styles.scss";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 const Login = () => {
   const [password, setPassword] = useState("");
