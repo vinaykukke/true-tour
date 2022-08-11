@@ -5,7 +5,7 @@ import Pano from "src/components/Pano";
 import { DEFAULT_DATA } from "src/data";
 import "./tools.styles.scss";
 import Toolbar from "src/components/Toolbar";
-import { useUpdate, useThree } from "src/context";
+import { useUpdate, useThree } from "src/context/ThreejsContext";
 
 /** Selected / Draggable objects */
 let draggableObject: THREE.Object3D;

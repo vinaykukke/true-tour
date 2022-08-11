@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
-import { useUpdate, useThree } from "src/context";
+import { useUpdate, useThree } from "src/context/ThreejsContext";
 import "./styles.scss";
 
 const InfoEdit = () => {

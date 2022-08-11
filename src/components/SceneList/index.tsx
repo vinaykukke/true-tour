@@ -4,7 +4,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { FullMetadata } from "firebase/storage";
-import { useThree, useUpdate } from "src/context";
+import { useThree, useUpdate } from "src/context/ThreejsContext";
 import "./styles.scss";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faPlus } from "@fortawesome/free-solid-svg-icons";

@@ -12,7 +12,7 @@ import {
   faTrash,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { useThree } from "src/context";
+import { useThree } from "src/context/ThreejsContext";
 import SceneList from "src/components/SceneList";
 import InfoEdit from "src/components/InfoEdit";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";

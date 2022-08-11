@@ -28,7 +28,7 @@ import Hotspot from "src/components/Hotspot";
 import { removeHotspot } from "src/helpers/dispose";
 import { THotspotType } from "src/types/hotspot";
 import { getScreenCenter } from "src/helpers/screenCenter";
-import { useThree, useUpdate } from "src/context";
+import { useThree, useUpdate } from "src/context/ThreejsContext";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
 import storage from "src/firebase";

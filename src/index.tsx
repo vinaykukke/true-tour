@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import ThreejsProvider from "./context";
+import ThreejsProvider from "./context/ThreejsContext";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";

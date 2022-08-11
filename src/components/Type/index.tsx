@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useThree, useUpdate } from "src/context";
+import { useThree, useUpdate } from "src/context/ThreejsContext";
 
 const Type = () => {
   const { selectedObj, type } = useThree();
