@@ -1,11 +1,11 @@
 import { useState } from "react";
 import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./login.styles.scss";
-import TextField from "@mui/material/TextField";
 
 const Login = () => {
   const [password, setPassword] = useState("");
@@ -21,11 +21,11 @@ const Login = () => {
 
   return (
     <div className="container">
-      <div className="top"></div>
-      <div className="bottom"></div>
+      <div className="top" />
+      <div className="bottom" />
       <div className="center">
         <h2>Please Sign In</h2>
-        <FormControl sx={{ minWidth: 120, width: 300 }}>
+        <FormControl sx={{ minWidth: 120, width: 300 }} onChange={handleChange}>
           <TextField
             id="email"
             type="email"
@@ -33,7 +33,6 @@ const Login = () => {
             label="Email"
             margin="dense"
             value={email}
-            onChange={handleChange}
             fullWidth
           />
           <TextField
@@ -42,7 +41,6 @@ const Login = () => {
             label="Password"
             margin="dense"
             value={password}
-            onChange={handleChange}
             fullWidth
             InputProps={{
               endAdornment: (
