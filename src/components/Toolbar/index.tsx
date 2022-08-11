@@ -31,7 +31,7 @@ import { getScreenCenter } from "src/helpers/screenCenter";
 import { useThree, useUpdate } from "src/context/ThreejsContext";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
-import storage from "src/firebase";
+import { storage } from "src/firebase";
 import ImageRack from "src/components/ImageRack";
 import "./styles.scss";
 
