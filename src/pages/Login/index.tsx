@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -7,11 +7,13 @@ import IconButton from "@mui/material/IconButton";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 import "./login.styles.scss";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +39,10 @@ const Login = () => {
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (user) navigate("/tool", { replace: true });
+  }, [user, navigate]);
 
   return (
     <div className="container">
@@ -79,7 +85,12 @@ const Login = () => {
                 ),
               }}
             />
-            <LoadingButton type="submit" loading={loading} variant="contained">
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              variant="contained"
+              sx={{ marginTop: "20px" }}
+            >
               Login
             </LoadingButton>
           </FormControl>

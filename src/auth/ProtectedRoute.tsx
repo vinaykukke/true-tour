@@ -4,7 +4,6 @@ import { useAuth } from "src/context/AuthContext";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const auth = useAuth();
   const location = useLocation();
-  console.log("USER: ", auth);
 
   if (!auth.user) {
     /**

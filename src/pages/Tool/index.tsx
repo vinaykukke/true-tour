@@ -121,19 +121,21 @@ const Tool = () => {
     camera.updateProjectionMatrix();
   };
 
-  const resizeRendererToDisplaySize = (root: HTMLElement) => {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize =
-      width !== root.clientWidth || height !== root.clientHeight;
+  const resizeRendererToDisplaySize = (root?: HTMLElement) => {
+    if (root) {
+      const canvas = renderer.domElement;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const needResize =
+        width !== root.clientWidth || height !== root.clientHeight;
 
-    if (needResize) {
-      renderer.setSize(root.clientWidth, root.clientHeight);
-      labelRenderer.setSize(root.clientWidth, root.clientHeight);
+      if (needResize) {
+        renderer.setSize(root.clientWidth, root.clientHeight);
+        labelRenderer.setSize(root.clientWidth, root.clientHeight);
+      }
+
+      return needResize;
     }
-
-    return needResize;
   };
 
   const dragObject = () => {

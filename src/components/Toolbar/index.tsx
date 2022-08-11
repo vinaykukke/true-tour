@@ -18,8 +18,13 @@ import {
   faUpload,
   faImages,
   faCheck,
+  faUser,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import Stack from "@mui/material/Stack";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
@@ -29,6 +34,7 @@ import { removeHotspot } from "src/helpers/dispose";
 import { THotspotType } from "src/types/hotspot";
 import { getScreenCenter } from "src/helpers/screenCenter";
 import { useThree, useUpdate } from "src/context/ThreejsContext";
+import { useAuth } from "src/context/AuthContext";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
 import { storage } from "src/firebase";
@@ -47,6 +53,7 @@ interface IUploadedImage {
 
 const Toolbar = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
+  const { logout } = useAuth();
   const {
     setSelectedObj,
     togglePreviewMode,
@@ -62,6 +69,13 @@ const Toolbar = (props: IProps) => {
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) =>
+    setAnchorEl(event.currentTarget);
+
+  const handleClose = () => setAnchorEl(null);
 
   const addHotspot =
     (type: THotspotType = "right") =>
@@ -171,6 +185,8 @@ const Toolbar = (props: IProps) => {
     }
   };
 
+  const handleLogout = () => logout();
+
   useEffect(() => {
     const imageListRef = ref(storage, "images/");
     const fetch = async () => {
@@ -217,27 +233,55 @@ const Toolbar = (props: IProps) => {
               <input hidden multiple accept="image/*" type="file" />
               <FontAwesomeIcon icon={icon} color={success ? "green" : ""} />
             </IconButton>
-            {uploadedImages.length > 0 && (
-              <IconButton
-                className="image__gallery"
-                aria-label="image gallery"
-                onClick={toggle}
-              >
-                <FontAwesomeIcon icon={faImages} />
-              </IconButton>
-            )}
+            <IconButton
+              disabled={uploadedImages.length === 0}
+              className="image__gallery"
+              aria-label="image gallery"
+              onClick={toggle}
+            >
+              <FontAwesomeIcon icon={faImages} />
+            </IconButton>
           </Stack>
           <Type />
         </>
       )}
-      <Button size="large" aria-label="preview" onClick={togglePreview}>
-        {previewMode ? "Exit" : "Preview"}
-      </Button>
-      {previewMode && (
-        <Button size="large" aria-label="publish">
-          Publish
+      <div style={{ display: "flex" }}>
+        <Button size="large" aria-label="preview" onClick={togglePreview}>
+          {previewMode ? "Exit" : "Preview"}
         </Button>
-      )}
+        {previewMode && (
+          <Button size="large" aria-label="publish">
+            Publish
+          </Button>
+        )}
+        <IconButton
+          onClick={handleAvatarClick}
+          size="small"
+          sx={{ ml: 4 }}
+          aria-controls={open ? "account-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+        >
+          <Avatar>
+            <FontAwesomeIcon icon={faUser} />
+          </Avatar>
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+        >
+          <MenuItem onClick={handleLogout}>
+            <FontAwesomeIcon
+              style={{ marginRight: "15px" }}
+              icon={faRightFromBracket}
+            />
+            Logout
+          </MenuItem>
+        </Menu>
+      </div>
       {hotspots.map((hs, i) => (
         <Hs
           onMouseMove={props.onMouseMove}

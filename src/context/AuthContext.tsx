@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "src/firebase";
 
 /** Auth Context */
@@ -12,9 +12,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+  const login = (email: string, password: string) =>
+    signInWithEmailAndPassword(auth, email, password);
+
+  const logout = () => signOut(auth);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     login,
+    logout,
   };
 
   return (
