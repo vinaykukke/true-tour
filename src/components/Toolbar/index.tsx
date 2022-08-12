@@ -18,13 +18,8 @@ import {
   faUpload,
   faImages,
   faCheck,
-  faUser,
-  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import Stack from "@mui/material/Stack";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
@@ -69,13 +64,6 @@ const Toolbar = (props: IProps) => {
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) =>
-    setAnchorEl(event.currentTarget);
-
-  const handleClose = () => setAnchorEl(null);
 
   const addHotspot =
     (type: THotspotType = "right") =>
@@ -211,77 +199,65 @@ const Toolbar = (props: IProps) => {
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      className={previewMode ? "toolbar toolbar__preview" : "toolbar"}
+      className="toolbar__container"
+      data-preview-mode={previewMode}
     >
-      {!previewMode && (
-        <>
-          <Stack direction="row" spacing={1}>
-            <IconButton
-              className="hotspot__add"
-              aria-label="add"
-              color="primary"
-              onClick={addHotspot()}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </IconButton>
-            <IconButton
-              className="upload__image"
-              aria-label="upload picture"
-              component="label"
-              onChange={handleUpload}
-            >
-              <input hidden multiple accept="image/*" type="file" />
-              <FontAwesomeIcon icon={icon} color={success ? "green" : ""} />
-            </IconButton>
-            <IconButton
-              disabled={uploadedImages.length === 0}
-              className="image__gallery"
-              aria-label="image gallery"
-              onClick={toggle}
-            >
-              <FontAwesomeIcon icon={faImages} />
-            </IconButton>
-          </Stack>
-          <Type />
-        </>
-      )}
-      <div style={{ display: "flex" }}>
-        <Button size="large" aria-label="preview" onClick={togglePreview}>
-          {previewMode ? "Exit" : "Preview"}
-        </Button>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        className="toolbar"
+      >
+        {!previewMode && (
+          <>
+            <Stack direction="row" spacing={1}>
+              <IconButton
+                className="hotspot__add"
+                aria-label="add"
+                color="primary"
+                onClick={addHotspot()}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </IconButton>
+              <IconButton
+                className="upload__image"
+                aria-label="upload picture"
+                component="label"
+                onChange={handleUpload}
+              >
+                <input hidden multiple accept="image/*" type="file" />
+                <FontAwesomeIcon icon={icon} color={success ? "green" : ""} />
+              </IconButton>
+              <IconButton
+                disabled={uploadedImages.length === 0}
+                className="image__gallery"
+                aria-label="image gallery"
+                onClick={toggle}
+              >
+                <FontAwesomeIcon icon={faImages} />
+              </IconButton>
+            </Stack>
+            <Type />
+          </>
+        )}
         {previewMode && (
           <Button size="large" aria-label="publish">
             Publish
           </Button>
         )}
-        <IconButton
-          onClick={handleAvatarClick}
-          size="small"
-          sx={{ ml: 4 }}
-          aria-controls={open ? "account-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          <Avatar>
-            <FontAwesomeIcon icon={faUser} />
-          </Avatar>
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          id="account-menu"
-          open={open}
-          onClose={handleClose}
-          onClick={handleClose}
-        >
-          <MenuItem onClick={handleLogout}>
-            <FontAwesomeIcon
-              style={{ marginRight: "15px" }}
-              icon={faRightFromBracket}
-            />
-            Logout
-          </MenuItem>
-        </Menu>
-      </div>
+        <Button size="large" aria-label="preview" onClick={togglePreview}>
+          {previewMode ? "Exit" : "Preview"}
+        </Button>
+      </Stack>
+      <Button
+        className="logout__button"
+        size="large"
+        variant="contained"
+        aria-label="logout"
+        onClick={handleLogout}
+      >
+        Logout
+      </Button>
       {hotspots.map((hs, i) => (
         <Hs
           onMouseMove={props.onMouseMove}
