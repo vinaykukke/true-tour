@@ -87,7 +87,7 @@ const Hotspot = (props: IProps) => {
       /** Remove the selected object */
       setSelectedObj(null);
     }
-  }, [previewMode]);
+  }, [previewMode, setSelectedObj]);
 
   const renderHotspots = () => {
     let img = null;

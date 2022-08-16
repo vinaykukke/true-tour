@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
 import setup from "src/three-js/setup";
