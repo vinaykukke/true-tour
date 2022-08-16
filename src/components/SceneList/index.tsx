@@ -35,6 +35,7 @@ const SceneList = (props: IProps) => {
         {noScenes ? "Upload a scene from the toolbar" : "Select Target Scene"}
       </FormLabel>
       <RadioGroup
+        className="radio__container"
         aria-labelledby="select__target_scene"
         value={targetScene}
         onChange={handleChange}

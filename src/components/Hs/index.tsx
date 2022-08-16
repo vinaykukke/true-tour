@@ -12,7 +12,7 @@ import {
   faTrash,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { useThree } from "src/context/ThreejsContext";
+import { useThree, useUpdate } from "src/context/ThreejsContext";
 import SceneList from "src/components/SceneList";
 import InfoEdit from "src/components/InfoEdit";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
@@ -40,6 +40,7 @@ const Hotspot = (props: IProps) => {
   } = mesh;
   const hsRef = useRef(null);
   const { selectedObj, previewMode } = useThree();
+  const { setSelectedObj } = useUpdate();
   const showTooltip = previewMode && type !== "info";
   const showTools =
     !previewMode && Boolean(selectedObj) && mesh.id === selectedObj.id;
@@ -73,6 +74,20 @@ const Hotspot = (props: IProps) => {
       if (hasFocus) hsRef.current.classList.remove("hotspot__focus");
     }
   }, [selectedObj, mesh]);
+
+  useEffect(() => {
+    if (previewMode) {
+      /** Removes the focus of newly added hotspot */
+      const hs = document.getElementsByClassName("hotspot__focus");
+      for (let i = 0; i < hs.length; i++) {
+        const element = hs[i];
+        element.classList.remove("hotspot__focus");
+      }
+
+      /** Remove the selected object */
+      setSelectedObj(null);
+    }
+  }, [previewMode]);
 
   const renderHotspots = () => {
     let img = null;

@@ -107,14 +107,13 @@
   .tooltiptext,
   .hotspot__edit_tooltiptext {
     visibility: hidden;
-    min-width: 160px;
+    min-width: 196px;
     max-width: 300px;
     background-color: #00000096;
     color: #000;
     text-align: center;
-    padding: 15px;
     border-radius: 6px;
-    bottom: 85px;
+    bottom: 81px;
     max-height: 200px;
     overflow-y: scroll;
 
@@ -124,17 +123,6 @@
 
     &[data-type="info"] {
       width: 300px;
-    }
-
-    &::after {
-      content: " ";
-      position: absolute;
-      top: 100%; /* At the bottom of the tooltip */
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: #00000096 transparent transparent transparent;
     }
   }
 

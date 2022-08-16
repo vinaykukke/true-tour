@@ -1,9 +1,15 @@
 .form__label {
+  padding: 10px 25px !important;
+  background-color: grey;
   color: white !important;
 
   &.Mui-focused {
     color: white !important;
   }
+}
+
+.radio__container {
+  padding: 10px 25px !important;
 }
 
 .radio__button {
