@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense, useCallback, useEffect, useRef } from "react";
 import * as THREE from "three";
 import setup from "src/three-js/setup";
 import Pano from "src/components/Pano";
@@ -184,7 +183,7 @@ const Tool = () => {
     }
   };
 
-  const animate = () => {
+  const animate = useCallback(() => {
     if (resizeRendererToDisplaySize(rootRef.current)) {
       camera.aspect =
         rootRef.current.clientWidth / rootRef.current.clientHeight;
@@ -201,7 +200,7 @@ const Tool = () => {
     dragObject();
 
     if (isUserInteracting) requestAnimationFrame(animate);
-  };
+  }, []);
 
   useEffect(() => {
     /** Initial Setup */
@@ -226,7 +225,7 @@ const Tool = () => {
     /** Start the animation */
     isUserInteracting = true;
     animate();
-  }, []);
+  }, [animate]);
 
   return (
     <Suspense fallback={null}>
