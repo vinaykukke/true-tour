@@ -7,7 +7,12 @@
   transform: translate(-50%, -50%);
   width: 50%;
   height: 50px;
-  transition: width 0.3s ease-in-out;
+  transition: width 0.3s ease-out;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 
   &[data-preview-mode="true"] {
     width: 25%;
@@ -15,19 +20,13 @@
 }
 
 .logout__button {
-  margin: 0 15px !important;
-  height: 50px;
-  border-radius: 5px !important;
+  margin-left: 5px !important;
 }
 
 .toolbar {
+  position: relative;
   height: 100%;
   width: 100%;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .hotspot__add {

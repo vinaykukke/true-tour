@@ -115,6 +115,8 @@
     padding: 15px;
     border-radius: 6px;
     bottom: 85px;
+    max-height: 200px;
+    overflow-y: scroll;
 
     /* Position the tooltip text */
     position: absolute;

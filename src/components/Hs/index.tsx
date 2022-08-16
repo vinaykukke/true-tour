@@ -16,7 +16,7 @@ import { useThree } from "src/context/ThreejsContext";
 import SceneList from "src/components/SceneList";
 import InfoEdit from "src/components/InfoEdit";
 import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
-import "./styles.scss";
+import "./hotspot.styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;

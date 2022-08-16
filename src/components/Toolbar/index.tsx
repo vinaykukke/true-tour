@@ -24,6 +24,7 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
 import Hotspot from "src/components/Hotspot";
 import { removeHotspot } from "src/helpers/dispose";
 import { THotspotType } from "src/types/hotspot";
@@ -249,10 +250,10 @@ const Toolbar = (props: IProps) => {
           {previewMode ? "Exit" : "Preview"}
         </Button>
       </Stack>
+      <Divider orientation="vertical" variant="middle" flexItem />
       <Button
         className="logout__button"
         size="large"
-        variant="contained"
         aria-label="logout"
         onClick={handleLogout}
       >
