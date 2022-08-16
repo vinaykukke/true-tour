@@ -7,6 +7,13 @@ import "./tools.styles.scss";
 import Toolbar from "src/components/Toolbar";
 import { useUpdate, useThree } from "src/context/ThreejsContext";
 
+/** User Interaction */
+let isUserInteracting = false;
+
+/** User Interaction Event*/
+const mouseMoveEndEvent = new Event("mouseMoveEnd");
+let timeout: NodeJS.Timeout = null;
+
 /** Selected / Draggable objects */
 let draggableObject: THREE.Object3D;
 
@@ -16,7 +23,7 @@ const moveMouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
 const Tool = () => {
-  const rootRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const { previewMode } = useThree();
   const { setSelectedObj } = useUpdate();
 
@@ -97,6 +104,18 @@ const Tool = () => {
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isUserInteracting) {
+      isUserInteracting = true;
+      animate();
+    }
+
+    if (timeout) clearTimeout(timeout);
+
+    timeout = setTimeout(
+      () => rootRef.current.dispatchEvent(mouseMoveEndEvent),
+      1000 * 10
+    );
+
     /** Bounding rect for the canvas */
     const rect = renderer.domElement.getBoundingClientRect();
 
@@ -164,9 +183,34 @@ const Tool = () => {
     }
   };
 
+  const animate = () => {
+    if (resizeRendererToDisplaySize(rootRef.current)) {
+      camera.aspect =
+        rootRef.current.clientWidth / rootRef.current.clientHeight;
+      camera.updateProjectionMatrix();
+    }
+
+    /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
+    controls.update();
+
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+
+    /** Enables object dragging */
+    dragObject();
+
+    if (isUserInteracting) requestAnimationFrame(animate);
+  };
+
   useEffect(() => {
     /** Initial Setup */
     setup();
+
+    /** User Interaction Event */
+    rootRef.current.addEventListener(
+      "mouseMoveEnd",
+      () => (isUserInteracting = false)
+    );
 
     /** Get all the mesh */
     const pano = Pano({
@@ -178,25 +222,8 @@ const Tool = () => {
     /** Add to scene */
     scene.add(pano); // World Space
 
-    function animate() {
-      if (resizeRendererToDisplaySize(rootRef.current)) {
-        camera.aspect =
-          rootRef.current.clientWidth / rootRef.current.clientHeight;
-        camera.updateProjectionMatrix();
-      }
-
-      /** Only required if controls.enableDamping = true, or if controls.autoRotate = true */
-      controls.update();
-
-      renderer.render(scene, camera);
-      labelRenderer.render(scene, camera);
-
-      /** Enables object dragging */
-      dragObject();
-
-      requestAnimationFrame(animate);
-    }
-
+    /** Start the animation */
+    isUserInteracting = true;
     animate();
   }, []);
 
