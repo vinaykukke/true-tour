@@ -43,7 +43,6 @@ const SceneList = (props: IProps) => {
       >
         {props.scenes.map((scene, i) => (
           <FormControlLabel
-            sx={{ color: "white" }}
             key={i}
             value={scene.url}
             control={

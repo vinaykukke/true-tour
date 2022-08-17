@@ -1,21 +1,9 @@
 .form__label {
   padding: 10px 25px !important;
-  background-color: grey;
+  background-color: #494848;
   color: white !important;
-
-  &.Mui-focused {
-    color: white !important;
-  }
 }
 
 .radio__container {
   padding: 10px 25px !important;
-}
-
-.radio__button {
-  color: white !important;
-
-  &.Mui-checked {
-    color: white !important;
-  }
 }
