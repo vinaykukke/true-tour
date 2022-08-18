@@ -14,6 +14,8 @@
 - [Prop VR - India](https://www.propvr.in/#Home)
 - [Realizing - US](https://realizing.io/)
   - Sister company of `Prop VR`
+  - Interior 360° Renders. 360° renders for immersive experience. => $250
+  - Interior 3D Virtual Tours. High quality interactive 360° interior virtual tour - best seller. => $1200
 - [Coohom - US](https://www.coohom.com/b2b/products/3dviewer-and-ar)
   - [Pricing](https://www.coohom.com/pricing)
   - They provide 3D assets like furnitures etc that be added to you library through shopify.
