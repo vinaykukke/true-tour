@@ -1,10 +1,10 @@
-import "./styles.scss";
+import "./header.styles.scss";
 
-const ImageRack = () => (
+const Header = () => (
   <div className="nav">
     <input type="checkbox" />
-    <span></span>
-    <span></span>
+    <span />
+    <span />
     <div className="menu">
       <li>
         <a href="#">home</a>
@@ -25,4 +25,4 @@ const ImageRack = () => (
   </div>
 );
 
-export default ImageRack;
+export default Header;
