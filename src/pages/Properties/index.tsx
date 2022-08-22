@@ -1,9 +1,12 @@
-import Header from "src/components/Header";
+import Typography from "@mui/material/Typography";
+import EnhancedTable from "src/components/EnhancedTable";
 
 const Properties = () => (
   <div>
-    This is the properties page
-    <Header />
+    <Typography align="center" variant="h2" gutterBottom>
+      Properties
+    </Typography>
+    <EnhancedTable />
   </div>
 );
 
