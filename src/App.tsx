@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Tool from "./pages/Tool";
 import Properties from "./pages/Properties";
 import Login from "./pages/Login";
+import Tours from "./pages/Tours";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import "./App.scss";
 
@@ -19,7 +20,15 @@ function App() {
         }
       />
       <Route
-        path="/tool"
+        path="/property/:id"
+        element={
+          <ProtectedRoute>
+            <Tours />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/property/:id/:tourId"
         element={
           <ProtectedRoute>
             <Tool />

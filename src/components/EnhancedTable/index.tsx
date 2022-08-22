@@ -7,21 +7,22 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import EnhancedTableHead from "./EnhancedTableHead";
+import "./table.styles.scss";
 
-export default function EnhancedTable() {
+const EnhancedTable = (props) => {
   // const history = useHistory();
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [orderBy, setOrderBy] = useState("name");
 
-  function stableSort(array) {
+  const stableSort = (tours) => {
     let sortedArray;
 
     if (orderBy === "name") {
-      sortedArray = orderByLodash(array, [(o) => o.customerId.name], order);
+      sortedArray = orderByLodash(tours, [(o) => o.name], order);
     }
 
     return sortedArray;
-  }
+  };
 
   const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -43,14 +44,25 @@ export default function EnhancedTable() {
           onRequestSort={handleRequestSort}
         />
         <TableBody>
-          {stableSort([]).map((listItem, index) => {
+          {stableSort(props.tours).map((listItem, index) => {
+            console.log(listItem);
+
             return (
               <TableRow style={{ cursor: "pointer" }} key={index}>
-                <TableCell style={{ minWidth: "10%", width: "10%" }}>
+                <TableCell
+                  align="center"
+                  style={{ minWidth: "10%", width: "10%" }}
+                >
                   {listItem.name}
                 </TableCell>
                 <TableCell
-                  align="left"
+                  align="center"
+                  style={{ minWidth: "22%", width: "22%" }}
+                >
+                  <span>{listItem.scenes.length}</span>
+                </TableCell>
+                <TableCell
+                  align="center"
                   style={{ minWidth: "22%", width: "22%" }}
                 >
                   <span>{listItem.status}</span>
@@ -62,4 +74,6 @@ export default function EnhancedTable() {
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default EnhancedTable;

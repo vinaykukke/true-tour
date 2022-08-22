@@ -7,13 +7,18 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 const headCells = [
   {
     id: "name",
-    label: "Property Name",
-    style: { minWidth: "50%", width: "50%" },
+    label: "Tour Name",
+    style: { minWidth: "33.33%", width: "33.33%" },
+  },
+  {
+    id: "numberOfScenes",
+    label: "Scenes",
+    style: { minWidth: "33.33%", width: "33.33%" },
   },
   {
     id: "status",
     label: "Status",
-    style: { minWidth: "50%", width: "50%" },
+    style: { minWidth: "33.33%", width: "33.33%" },
   },
 ];
 
@@ -34,6 +39,7 @@ export default function EnhancedTableHead(props: IProps) {
       <TableRow>
         {headCells.map((cell) => (
           <TableCell
+            className="table__header_row"
             style={cell.style}
             key={cell.id}
             align="center"

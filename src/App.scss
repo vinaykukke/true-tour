@@ -1,0 +1,145 @@
+:root {
+  /** Background Colors */
+  --body-background: #1d1d1d;
+  --container-background: #292929;
+  --primary-logo-background: #000000;
+  --menu-background: #181818;
+
+  /** Link Colors */
+  --link-color: #0070f3;
+
+  /** General Colors */
+  --lightblue: #3d9dea;
+  --turquoise: #04f8f9;
+  --red: #f7484e;
+  --purple: #4a4eee;
+  --darkblue: #040af5;
+  --white: #ffffff;
+
+  /** Text Colors */
+  --text-color: #d5e1ef;
+  --primary-logo-text: #fad02c;
+
+  /** Gradients */
+  --bg-shape-color: linear-gradient(120deg, #343a4f, #0f1620);
+  --card-container-gradient: linear-gradient(
+    180deg,
+    var(--lightblue),
+    var(--purple)
+  );
+  --text-gradient: linear-gradient(45deg, #3d9dea 20%, #ce11ee 70%);
+
+  /** Spacing */
+  --xs-spacing: 5px;
+  --s-spacing: 10px;
+  --m-spacing: 15px;
+  --l-spacing: 20px;
+  --xl-spacing: 25px;
+  --xxl-spacing: 30px;
+  --xxxl-spacing: 35px;
+  --xxxxl-spacing: 40px;
+  --xxxxxl-spacing: 45px;
+  --xxxxxxl-spacing: 50px;
+
+  /** Border Radius */
+  --xxl-border-radius: 32px;
+  --xl-border-radius: 16px;
+  --l-border-radius: 8px;
+  --border-radius: 6px;
+  --s-border-radius: 4px;
+  --xs-border-radius: 2px;
+
+  /** Fonts */
+  --h-font-size: 42px;
+  --xxxxxl-font-size: 36px;
+  --xxxxl-font-size: 30px;
+  --xxxl-font-size: 26px;
+  --xxl-font-size: 24px;
+  --xl-font-size: 20px;
+  --l-font-size: 18px;
+  --default-font-size: 16px;
+  --m-font-size: 14px;
+  --s-font-size: 12px;
+  --xs-font-size: 10px;
+  --xxs-font-size: 8px;
+  --font-family: "Roboto", sans-serif;
+  --regular-weight: 400;
+  --semi-bold: 600;
+  --bold: 700;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  /** Root Font size */
+  font-size: var(--default-font-size);
+  background-color: var(--body-background);
+
+  /* Responsive layout - Changing the font on mobile screens */
+  @media screen and (max-width: 800px) {
+    font-size: var(--xs-font-size);
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  h1 {
+    font-size: 6rem;
+    font-weight: var(--bold);
+    color: white;
+    width: fit-content;
+    margin: 0;
+
+    @media screen and (max-width: 800px) {
+      font-size: 3.5rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--turquoise);
+    // margin: 0 0 10px 0;
+  }
+
+  h3 {
+    font-size: 2rem;
+    color: white;
+  }
+
+  p {
+    color: white;
+    font-size: 1.2rem;
+
+    @media screen and (max-width: 800px) {
+      font-size: 1.7rem;
+    }
+  }
+
+  .anchor {
+    text-decoration: underline;
+    color: var(--turquoise);
+  }
+}
+
+.gradientText {
+  background: var(--text-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.fit-content {
+  width: fit-content;
+}

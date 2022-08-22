@@ -40,7 +40,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user) navigate("/tool", { replace: true });
+    if (user) navigate("/properties", { replace: true });
   }, [user, navigate]);
 
   return (
