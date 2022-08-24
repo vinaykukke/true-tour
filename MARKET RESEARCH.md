@@ -2,6 +2,13 @@
 
 ## COMPETITION
 
+- [TeraPact](https://www.terapact.com/teravizinteractivesuite)
+  - They do 3D photo-realistic renders of blueprints
+  - They just started doing the 3D renders for Brigade groups, they replaced `i3D-Virtual Tours`
+  - They do a fully 3D virtual tour, using 3D models and photo-realistic renders
+- [I3D-Virtual-Tour](https://i3dvirtualtour.com/)
+  - They did most of the 3D virtual tours for brigade group until recently.
+  - They do 3D models with real photo textures applied to 3D models. This is not very good it is heavy and doesnt look good.
 - [Architype3D - India](https://www.architype3d.com/services/)
 - [Matter Port - US](https://matterport.com/industries/travel-hospitality)
   - [Matter port GO](https://go.matterport.com/RRE_EN.html?utm_source=google&utm_medium=ppc&utm_campaign=EN_APAC_IN_Converting&utm_content=614747938755&utm_term=3d%20for%20real%20estate&matchtype=p&device=c&gclid=CjwKCAjwo_KXBhAaEiwA2RZ8hMvAqZ4zPYV37eay3zmZ-x_Lf4rcLrdRlEC0wlIulrP1tLnAdI2TDRoCVagQAvD_BwE)
@@ -19,6 +26,12 @@
 - [Coohom - US](https://www.coohom.com/b2b/products/3dviewer-and-ar)
   - [Pricing](https://www.coohom.com/pricing)
   - They provide 3D assets like furnitures etc that be added to you library through shopify.
+
+## OTHER PLAYERS (SERIOUS)
+
+- A company that is making virtual tours for [prestige](https://www.prestigeconstructions.com/projects/prestige-finsbury-park-hyde/) using [3D-Vista Pro](https://www.3dvista.com/en/products/virtualtour)
+- [TeraPact](https://www.terapact.com/teravizinteractivesuite) doing fully 3D blueprint / house modeling for [Brigade Group](https://www.brigadegroup.com/residential/projects/bangalore)
+- [I3D-Virtual-Tour](https://i3dvirtualtour.com/) doing fully 3D blueprint / house modeling for [Brigade Group](https://www.brigadegroup.com/residential/projects/bangalore)
 
 ## OTHER PLAYERS (NOT SERIOUS)
 

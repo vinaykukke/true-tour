@@ -5,6 +5,7 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useUpdate, useThree } from "src/context/ThreejsContext";
 import "./styles.scss";
 
 interface IProps {
@@ -18,10 +19,13 @@ interface IUploadedImage {
 
 const ImageRack = (props: IProps) => {
   const storage = getStorage();
+  const { activeScene } = useThree();
+  const { setActiveScene } = useUpdate();
   const renderImages = (
     item: { url: string; metaData: FullMetadata },
     i: number
   ) => {
+    const active = activeScene.url === item.url;
     const {
       name,
       customMetadata: { title = "Hotel", name: metaName = "Demo Images" },
@@ -36,8 +40,15 @@ const ImageRack = (props: IProps) => {
       await deleteObject(deleteRef);
     };
 
+    const handleClick = () => setActiveScene(item);
+
     return (
-      <ImageListItem key={i}>
+      <ImageListItem
+        key={i}
+        className="image__uploaded"
+        onClick={handleClick}
+        data-active={active}
+      >
         <img
           src={`${item.url}?w=248&fit=crop&auto=format`}
           srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
@@ -48,12 +59,15 @@ const ImageRack = (props: IProps) => {
           title={title}
           subtitle={metaName}
           actionIcon={
-            <FontAwesomeIcon
-              icon={faTrash}
-              color="white"
-              style={{ padding: "0 15px", cursor: "pointer" }}
-              onClick={deleteItem}
-            />
+            <div className="list__item_bar">
+              {active && <div className="chip__active">Active</div>}
+              <FontAwesomeIcon
+                icon={faTrash}
+                color="white"
+                style={{ padding: "0 15px", cursor: "pointer" }}
+                onClick={deleteItem}
+              />
+            </div>
           }
         />
       </ImageListItem>

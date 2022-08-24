@@ -6,8 +6,6 @@ import FormLabel from "@mui/material/FormLabel";
 import { FullMetadata } from "firebase/storage";
 import { useThree, useUpdate } from "src/context/ThreejsContext";
 import "./styles.scss";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface IProps {
   scenes: IUploadedImage[];
@@ -19,7 +17,10 @@ interface IUploadedImage {
 }
 
 const SceneList = (props: IProps) => {
-  const { targetScene, selectedObj } = useThree();
+  const { selectedObj } = useThree();
+  const {
+    userData: { targetScene = "" },
+  } = selectedObj;
   const { setTargetScene } = useUpdate();
   const noScenes = props.scenes.length === 0;
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

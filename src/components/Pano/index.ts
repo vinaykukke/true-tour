@@ -1,30 +1,26 @@
 import * as THREE from "three";
+// import { TPano } from "types/pano";
 
-interface IPanoProps {
+interface ILoaderProps {
   img: string;
+  mesh: any;
 }
 
 /**
  * Create a new Hotspot and set its position in the scene
  * @param [img = string] Specify the image you want to be loaded.
  */
-const Pano = (props: IPanoProps) => {
-  // const frustum = new THREE.Frustum();
-  const { img } = props;
-  /** Texture */
-  const loader = new THREE.TextureLoader();
-  const texture = loader.load(img);
-  /** This inverts the texture on the x axis */
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.minFilter = THREE.NearestFilter;
-  texture.repeat.x = -1;
-  /** Centers the texture to the center of the image */
-  texture.offset.x = 0.25; // 0.0 - 1.0
+const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
 
+// const manager = new THREE.LoadingManager();
+
+/**
+ * Create a new Panoramic sphere and set its position in the scene
+ * @param [img = string] Specify the image you want to be loaded.
+ */
+const Pano = () => {
   /** Pano Dome */
-  const geometry = new THREE.SphereBufferGeometry(200, 100, 50);
   const material = new THREE.MeshBasicMaterial({
-    map: texture,
     color: 0xffffff,
     side: THREE.BackSide,
   });
@@ -34,24 +30,47 @@ const Pano = (props: IPanoProps) => {
   mesh.name = "mesh__pano";
   mesh.userData = {
     type: "pano",
-    inView: false,
-    inFrustum: false,
+    active: false,
   };
 
-  // mesh.onBeforeRender = () => {
-  //   const matrix = new THREE.Matrix4().multiplyMatrices(
-  //     camera.projectionMatrix,
-  //     camera.matrixWorldInverse
-  //   );
-  //   /** Mesh is inView */
-  //   mesh.userData.inView = true;
-
-  //   frustum.setFromProjectionMatrix(matrix);
-  //   /** Indicates if the Mesh is in the scene but outside of the camera furstum */
-  //   mesh.userData.inFrustum = frustum.containsPoint(mesh.position);
-  // };
-
   return mesh;
+};
+
+export const loader = (props: ILoaderProps) => {
+  const { img, mesh } = props;
+  /** Texture */
+  const loader = new THREE.TextureLoader();
+  loader.load(
+    img,
+    (texture) => {
+      /** Cube map images */
+      // Equirectangular to cube map
+      // const texture = new THREE.CubeTextureLoader().load([
+      //   "/px.jpg",
+      //   "/nx.jpg",
+      //   "/ny.jpg",
+      //   "/py.jpg",
+      //   "/pz.jpg",
+      //   "/nz.jpg",
+      // ]);
+      // texture.flipY = true;
+
+      /** This inverts the texture on the x axis */
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.minFilter = THREE.NearestFilter;
+      texture.repeat.set(-1, 1);
+      /** Centers the texture to the center of the image */
+      texture.offset.x = 0.25; // 0.0 - 1.0
+
+      /** Once the texture has loaded, update the .map of the material */
+      mesh.material.map = texture;
+      mesh.material.needsUpdate = true;
+    },
+    undefined,
+    (error) => {
+      console.error("TEXTURE_LOADER_ERROR: ", error);
+    }
+  );
 };
 
 export default Pano;

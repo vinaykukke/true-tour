@@ -45,8 +45,6 @@ const EnhancedTable = (props) => {
         />
         <TableBody>
           {stableSort(props.tours).map((listItem, index) => {
-            console.log(listItem);
-
             return (
               <TableRow style={{ cursor: "pointer" }} key={index}>
                 <TableCell

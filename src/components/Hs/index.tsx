@@ -19,12 +19,13 @@ import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
 import "./hotspot.styles.scss";
 
 interface IProps {
-  onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseMove?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   mesh: Mesh;
   tabIndex: number;
-  deleteHotspot: () => void;
-  scenes: IUploadedImage[];
+  deleteHotspot?: () => void;
+  scenes?: IUploadedImage[];
+  publishedMode?: boolean;
 }
 
 interface IUploadedImage {
@@ -33,7 +34,7 @@ interface IUploadedImage {
 }
 
 const Hotspot = (props: IProps) => {
-  const { mesh, onMouseMove, tabIndex, onClick } = props;
+  const { mesh, onMouseMove, tabIndex, onClick, publishedMode } = props;
   const {
     userData: { type },
     children,
@@ -41,11 +42,11 @@ const Hotspot = (props: IProps) => {
   const hsRef = useRef(null);
   const { selectedObj, previewMode } = useThree();
   const { setSelectedObj } = useUpdate();
-  const showTooltip = previewMode && type !== "info";
-  const showTools =
-    !previewMode && Boolean(selectedObj) && mesh.id === selectedObj.id;
+  const mode = publishedMode ? publishedMode : previewMode;
+  const showTooltip = mode && type !== "info";
+  const showTools = !mode && Boolean(selectedObj) && mesh.id === selectedObj.id;
   const expand =
-    previewMode &&
+    mode &&
     type === "info" &&
     Boolean(mesh.userData?.infoTitle) &&
     Boolean(mesh.userData?.infoBody);
@@ -76,7 +77,7 @@ const Hotspot = (props: IProps) => {
   }, [selectedObj, mesh]);
 
   useEffect(() => {
-    if (previewMode) {
+    if (mode) {
       /** Removes the focus of newly added hotspot */
       const hs = document.getElementsByClassName("hotspot__focus");
       for (let i = 0; i < hs.length; i++) {
@@ -87,7 +88,7 @@ const Hotspot = (props: IProps) => {
       /** Remove the selected object */
       setSelectedObj(null);
     }
-  }, [previewMode, setSelectedObj]);
+  }, [mode, setSelectedObj]);
 
   const renderHotspots = () => {
     let img = null;
@@ -182,11 +183,11 @@ const Hotspot = (props: IProps) => {
         data-expand={expand}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
-        onMouseMove={!previewMode ? onMouseMove : undefined}
-        onClick={previewMode ? onClick : undefined}
+        onMouseMove={!mode ? onMouseMove : undefined}
+        onClick={mode ? onClick : undefined}
         tabIndex={tabIndex}
-        onMouseOver={previewMode ? handleMouseOver : undefined}
-        onMouseOut={previewMode ? handleMouseOut : undefined}
+        onMouseOver={mode ? handleMouseOver : undefined}
+        onMouseOut={mode ? handleMouseOut : undefined}
       >
         <div className="hotspot__title">
           {renderHotspots()}

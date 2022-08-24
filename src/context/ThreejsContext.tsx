@@ -13,6 +13,7 @@ const ThreejsProvider = ({ children }) => {
   const [infoTitle, setInfoTitle] = useState("");
   const [infoBody, setInfoBody] = useState("");
   const [targetScene, setTargetScene] = useState("");
+  const [activeScene, setActiveScene] = useState(null);
   const defaultType = selectedObj ? selectedObj.userData.type : "";
   const [type, setType] = useState(defaultType);
 
@@ -29,6 +30,7 @@ const ThreejsProvider = ({ children }) => {
     targetScene,
     type,
     previewMode,
+    activeScene,
   };
 
   const threeUpdate = {
@@ -38,6 +40,7 @@ const ThreejsProvider = ({ children }) => {
     setType,
     setTargetScene,
     togglePreviewMode,
+    setActiveScene,
   };
 
   return (

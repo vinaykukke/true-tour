@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable */
+import React, { useCallback, useEffect, useState } from "react";
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import {
   getDownloadURL,
@@ -11,6 +12,9 @@ import {
   getMetadata,
   FullMetadata,
 } from "firebase/storage";
+import { ref as dbRef, update, get } from "firebase/database";
+import { useParams } from "react-router-dom";
+import { db, storage } from "src/firebase";
 import { v4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -33,9 +37,16 @@ import { useThree, useUpdate } from "src/context/ThreejsContext";
 import { useAuth } from "src/context/AuthContext";
 import Hs from "src/components/Hs";
 import Type from "src/components/Type";
-import { storage } from "src/firebase";
 import ImageRack from "src/components/ImageRack";
-import "./styles.scss";
+import PublishModal from "src/components/PublishModal";
+import getSceneData from "src/helpers/dataProcessor";
+import Pano, { loader } from "src/components/Pano";
+import { DEFAULT_DATA } from "src/data";
+import { IDBHotspot } from "src/types/hotspot";
+import { IDBScene } from "src/types/scene";
+import { TPano } from "src/types/pano";
+import { moveCamera } from "src/helpers/camera";
+import "./toolbar.styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -48,30 +59,39 @@ interface IUploadedImage {
 }
 
 const Toolbar = (props: IProps) => {
-  const { selectedObj, previewMode } = useThree();
+  const { selectedObj, previewMode, activeScene } = useThree();
   const { logout } = useAuth();
+  const params = useParams();
   const {
     setSelectedObj,
     togglePreviewMode,
     setInfoTitle,
     setInfoBody,
     setTargetScene,
+    setActiveScene,
   } = useUpdate();
   const [showImageRack, toggleImageRack] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [publishSuccess, setPublishSuccess] = useState(false);
+  const [open, setOpen] = useState(false);
   const icon = success ? faCheck : faUpload;
   const [hotspots, setHotspots] = useState<
     Mesh<SphereGeometry, MeshBasicMaterial>[]
   >([]);
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
+  const [dbScenes, setDbScenes] = useState<IDBScene[]>([]);
+  const databaseRef = dbRef(
+    db,
+    `tours/sobha-developers/${params.id}/${params.tourId}`
+  );
 
   const addHotspot =
     (type: THotspotType = "right") =>
     () => {
       /** https://stackoverflow.com/questions/11036106/three-js-projector-and-ray-objects */
       const center = getScreenCenter();
-      const pano = scene.getObjectByName("mesh__pano");
+      const pano = scene.children.find((sc) => sc.userData.active === true);
       const hs = Hotspot({ type, newHotspot: true });
 
       if (center) hs.position.copy(center.clone());
@@ -86,6 +106,18 @@ const Toolbar = (props: IProps) => {
       pano.worldToLocal(hs.position);
       pano.add(hs);
     };
+
+  const addHotspots = (pano: TPano) => (hspt: IDBHotspot) => {
+    const hs = Hotspot({ type: hspt.userData.type });
+    hs.position.set(hspt.position.x, hspt.position.y, hspt.position.z);
+    hs.userData = hspt.userData;
+
+    setHotspots((prev) => [...prev, hs]);
+
+    /** Converting to the pano's local system before adding it to the scene */
+    pano.worldToLocal(hs.position);
+    pano.add(hs);
+  };
 
   const deleteHotspot = () => {
     /** Remove the selected object from the scene */
@@ -105,6 +137,9 @@ const Toolbar = (props: IProps) => {
 
   const togglePreview = () => togglePreviewMode((prev) => !prev);
   const toggle = () => toggleImageRack((prev) => !prev);
+
+  /** Modal close */
+  const handleClose = () => setOpen(false);
 
   const onProgress = (snapshot: UploadTaskSnapshot) => {
     /**
@@ -138,15 +173,27 @@ const Toolbar = (props: IProps) => {
 
   const handleUpload = async (e: React.ChangeEvent<any>) => {
     const imagesArray: File[] = Array.from(e.target.files);
+    const zero = uploadedImages.length === 0;
     const promises: Promise<IUploadedImage>[] = [];
+    const dbPayload = [];
+
     /** Show loading indicator */
     setLoading(true);
 
-    imagesArray.forEach((img) => {
+    imagesArray.forEach((img, i) => {
+      const firstUpload = zero && i === 0 ? "1" : "0";
       const uuid = v4();
-      const imageRef = ref(storage, `images/${img.name}__${uuid}`);
+      const id = uploadedImages.length + i + 1;
+      const fullPath = `sobha-developers/${params.id}/${params.tourId}/${img.name}__${uuid}`;
+      const imageRef = ref(storage, fullPath);
       const uploadTask = uploadBytesResumable(imageRef, img, {
-        customMetadata: { name: img.name, title: "Hotel", uuid },
+        customMetadata: {
+          name: img.name,
+          title: "Hotel",
+          firstUpload,
+          id: id.toString(),
+          uuid,
+        },
       });
       const promise = new Promise<IUploadedImage>((resolve, reject) =>
         /**
@@ -163,10 +210,13 @@ const Toolbar = (props: IProps) => {
         )
       );
       promises.push(promise);
+      dbPayload.push({ id: id.toString(), fullPath });
     });
 
     const urls = await Promise.all(promises);
     if (urls.length > 0) {
+      /** Update the Database with the paths to the images in storage */
+      await update(databaseRef, { scenes: dbPayload });
       setLoading(false);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
@@ -176,8 +226,86 @@ const Toolbar = (props: IProps) => {
 
   const handleLogout = () => logout();
 
+  const handlePublish = async () => {
+    try {
+      await update(databaseRef, {
+        status: "Published",
+        scenes: getSceneData(),
+      });
+      setPublishSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setPublishSuccess(false);
+    }
+    setOpen(true);
+  };
+
+  const run = useCallback((dbScenes: IDBScene[], activeScene) => {
+    const existingScene = scene.children.find((sc: TPano) => {
+      const currentActive =
+        sc.userData.fullPath === activeScene.metaData.fullPath;
+
+      if (currentActive) sc.userData.active = true;
+      if (!currentActive) {
+        sc.userData.active = false;
+        sc.material.map = null;
+        sc.material.needsUpdate = true;
+      }
+
+      return currentActive;
+    });
+
+    if (existingScene) {
+      loader({ img: activeScene.url, mesh: existingScene });
+      /** Move camera to the currently */
+      moveCamera(existingScene);
+    }
+
+    if (!existingScene) {
+      dbScenes.forEach((sc, i) => {
+        const num = scene.children.length === 0 ? i : scene.children.length;
+        const activeSceneId = parseInt(activeScene.metaData.customMetadata.id);
+        const currentlyActiveScene = sc.id === activeSceneId;
+        const shouldAddHotspots = sc && sc.hotspots && sc.hotspots.length > 0;
+
+        /** Get all the mesh */
+        const pano = Pano();
+
+        /** Set the position of the pano */
+        pano.position.set(0, 0, DEFAULT_DATA.pano_radius * 5 * num);
+
+        /** Setting fullPath */
+        pano.userData.fullPath = sc.fullPath;
+
+        if (shouldAddHotspots) sc.hotspots.forEach(addHotspots(pano));
+
+        /** Add to scene */
+        scene.add(pano); // World Space
+
+        if (currentlyActiveScene) {
+          pano.userData.active = true;
+          loader({ img: activeScene.url, mesh: pano });
+          /** Move camera to the currently active scene */
+          moveCamera(pano);
+        }
+      });
+    }
+  }, []);
+
+  /** Automatically set the 1st uploaded images to the currently active scene */
   useEffect(() => {
-    const imageListRef = ref(storage, "images/");
+    const set = !activeScene && uploadedImages.length > 0;
+    if (set) {
+      const sc = uploadedImages.at(0);
+      setActiveScene(sc);
+    }
+  }, [activeScene, uploadedImages]);
+
+  useEffect(() => {
+    const imageListRef = ref(
+      storage,
+      `sobha-developers/${params.id}/${params.tourId}`
+    );
     const fetch = async () => {
       const res = await listAll(imageListRef);
       const promises = res.items.map(
@@ -191,6 +319,27 @@ const Toolbar = (props: IProps) => {
       );
       const urls = await Promise.all(promises);
       setUploadedImages(urls);
+    };
+    fetch();
+  }, [params]);
+
+  useEffect(() => {
+    /** Get all the mesh */
+    if (activeScene) {
+      /** Close image rack */
+      if (showImageRack) toggle();
+      if (dbScenes.length > 0) run(dbScenes, activeScene);
+    }
+  }, [activeScene, dbScenes]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await get(databaseRef);
+
+      if (res.exists()) {
+        const scenesfromDB: IDBScene[] = res.val().scenes;
+        if (scenesfromDB) setDbScenes(scenesfromDB);
+      }
     };
     fetch();
   }, []);
@@ -217,6 +366,7 @@ const Toolbar = (props: IProps) => {
                 aria-label="add"
                 color="primary"
                 onClick={addHotspot()}
+                disabled={!activeScene}
               >
                 <FontAwesomeIcon icon={faPlus} />
               </IconButton>
@@ -242,7 +392,7 @@ const Toolbar = (props: IProps) => {
           </>
         )}
         {previewMode && (
-          <Button size="large" aria-label="publish">
+          <Button size="large" aria-label="publish" onClick={handlePublish}>
             Publish
           </Button>
         )}
@@ -281,6 +431,11 @@ const Toolbar = (props: IProps) => {
           <LinearProgress />
         </Box>
       )}
+      <PublishModal
+        open={open}
+        handleClose={handleClose}
+        success={publishSuccess}
+      />
     </Stack>
   );
 };

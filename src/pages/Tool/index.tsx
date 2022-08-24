@@ -1,11 +1,15 @@
 import React, { Suspense, useCallback, useEffect, useRef } from "react";
 import * as THREE from "three";
 import setup from "src/three-js/setup";
-import Pano from "src/components/Pano";
-import { DEFAULT_DATA } from "src/data";
-import "./tools.styles.scss";
+import { TPano } from "src/types/pano";
 import Toolbar from "src/components/Toolbar";
 import { useUpdate, useThree } from "src/context/ThreejsContext";
+import {
+  createScene,
+  handleZoom,
+  resizeRendererToDisplaySize,
+} from "src/helpers/tool";
+import "./tools.styles.scss";
 
 /** User Interaction */
 let isUserInteracting = false;
@@ -24,7 +28,7 @@ const raycaster = new THREE.Raycaster();
 
 const Tool = () => {
   const rootRef = useRef<HTMLDivElement>(null);
-  const { previewMode } = useThree();
+  const { previewMode, activeScene } = useThree();
   const { setSelectedObj } = useUpdate();
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -56,9 +60,7 @@ const Tool = () => {
      * Calculate objects intersecting the picking ray.
      * The array is sorted. Meaning that closest intersecting object is at position 0.
      */
-    const found = raycaster.intersectObjects<
-      THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
-    >(scene.children);
+    const found = raycaster.intersectObjects<TPano>(scene.children);
     const obj = found.length > 0 && found[0].object;
 
     if (!previewMode && obj.userData.draggable) {
@@ -71,22 +73,8 @@ const Tool = () => {
       const targetScene = obj.userData.targetScene;
       const execute = executable && Boolean(targetScene);
 
-      if (execute) {
-        /** Get all the mesh */
-        const pano = Pano({
-          img: targetScene,
-        });
-        /** Set the position of the pano */
-        pano.position.set(0, 0, DEFAULT_DATA.pano_radius * 5);
-
-        /** Add to scene */
-        scene.add(pano); // World Space
-
-        controls.unlock();
-        camera.position.setZ(pano.position.z + 0.1);
-        controls.target.copy(pano.position.clone());
-        controls.lock();
-      }
+      /** TODO: Needs to check in the DB if there is already a scene and if not the make a new one */
+      if (execute) createScene(targetScene);
     }
 
     /** Clear selectedObject once focus is shifted from hotspot */
@@ -110,9 +98,8 @@ const Tool = () => {
     }
 
     if (timeout) clearTimeout(timeout);
-
     timeout = setTimeout(
-      () => rootRef.current.dispatchEvent(mouseMoveEndEvent),
+      () => rootRef.current?.dispatchEvent(mouseMoveEndEvent),
       1000 * 10
     );
 
@@ -128,35 +115,6 @@ const Tool = () => {
     moveMouse.y = -y * 2 + 1;
   };
 
-  const handleZoom = (event: React.WheelEvent<HTMLDivElement>) => {
-    const zoom = camera.zoom;
-    const zoomIn = event.deltaY < 0 && zoom <= DEFAULT_DATA.camera_zoom__max;
-    const zoomOut = event.deltaY > 0 && zoom >= DEFAULT_DATA.camera_zoom__min;
-
-    if (zoomIn) camera.zoom = zoom + 0.2;
-    if (zoomOut) camera.zoom = zoom - 0.2;
-
-    /** Update the projection matrix */
-    camera.updateProjectionMatrix();
-  };
-
-  const resizeRendererToDisplaySize = (root?: HTMLElement) => {
-    if (root) {
-      const canvas = renderer.domElement;
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      const needResize =
-        width !== root.clientWidth || height !== root.clientHeight;
-
-      if (needResize) {
-        renderer.setSize(root.clientWidth, root.clientHeight);
-        labelRenderer.setSize(root.clientWidth, root.clientHeight);
-      }
-
-      return needResize;
-    }
-  };
-
   const dragObject = () => {
     if (draggableObject) {
       /** Disable OrbitalControl if user is dragging object */
@@ -165,16 +123,18 @@ const Tool = () => {
       /** Set the camera from which the ray should orginate and to what coordinates it should go to */
       raycaster.setFromCamera(moveMouse, camera);
 
-      const found = raycaster.intersectObjects<
-        THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
-      >(scene.children);
+      const found = raycaster.intersectObjects<TPano>(scene.children);
 
       if (found.length > 0) {
         found.forEach((item) => {
           /** If the intersected object is not a pano OR is a hotspot the skip it and move to next item */
-          if (item.object.name !== "mesh__pano") return;
+          const skip =
+            item.object.name !== "mesh__pano" || !item.object.userData?.active;
+
+          if (skip) return;
 
           draggableObject.position.copy(item.point.clone());
+          item.object.worldToLocal(draggableObject.position);
         });
       }
 
@@ -212,16 +172,6 @@ const Tool = () => {
       () => (isUserInteracting = false)
     );
 
-    /** Get all the mesh */
-    const pano = Pano({
-      img: "/pano_1.jpg",
-    });
-    /** Set the position of the pano */
-    pano.position.set(0, 0, 0);
-
-    /** Add to scene */
-    scene.add(pano); // World Space
-
     /** Start the animation */
     isUserInteracting = true;
     animate();
@@ -236,6 +186,11 @@ const Tool = () => {
         onMouseMove={handleMouseMove}
         onWheel={handleZoom}
       />
+      {!activeScene && (
+        <div className="default_message__no_active_scene">
+          Please upload an image to get started.
+        </div>
+      )}
       <Toolbar onMouseMove={handleMouseMove} onClick={handleClick} />
     </Suspense>
   );
