@@ -15,7 +15,6 @@ import {
 import { useThree, useUpdate } from "src/context/ThreejsContext";
 import SceneList from "src/components/SceneList";
 import InfoEdit from "src/components/InfoEdit";
-import { SceneTooltip, DefaultTooltip } from "./TooltipElements";
 import "./hotspot.styles.scss";
 
 interface IProps {
@@ -26,6 +25,7 @@ interface IProps {
   deleteHotspot?: () => void;
   scenes?: IUploadedImage[];
   publishedMode?: boolean;
+  editMode?: boolean;
 }
 
 interface IUploadedImage {
@@ -43,13 +43,13 @@ const Hotspot = (props: IProps) => {
   const { selectedObj, previewMode } = useThree();
   const { setSelectedObj } = useUpdate();
   const mode = publishedMode ? publishedMode : previewMode;
-  const showTooltip = mode && type !== "info";
   const showTools = !mode && Boolean(selectedObj) && mesh.id === selectedObj.id;
-  const expand =
+  const expandInfoHotspot =
     mode &&
     type === "info" &&
     Boolean(mesh.userData?.infoTitle) &&
     Boolean(mesh.userData?.infoBody);
+  const expand = previewMode || publishedMode;
 
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
@@ -122,26 +122,6 @@ const Hotspot = (props: IProps) => {
     return img;
   };
 
-  const renderTooltip = () => {
-    let Tooltip = null;
-    const name = mesh.userData.sceneName;
-
-    switch (type) {
-      case "left":
-      case "right":
-      case "down":
-      case "up":
-        Tooltip = <SceneTooltip name={name} />;
-        break;
-
-      default:
-        Tooltip = <DefaultTooltip />;
-        break;
-    }
-
-    return Tooltip;
-  };
-
   const renderEditTooltip = () => {
     let Tooltip = null;
 
@@ -191,19 +171,15 @@ const Hotspot = (props: IProps) => {
       >
         <div className="hotspot__title">
           {renderHotspots()}
-          {expand && <div className="title">{mesh.userData.infoTitle}</div>}
+          {!expandInfoHotspot && expand && (
+            <div className="title">{mesh.userData.sceneName}</div>
+          )}
+          {expandInfoHotspot && (
+            <div className="title">{mesh.userData.infoTitle}</div>
+          )}
         </div>
-        {expand && (
+        {expandInfoHotspot && (
           <div className="hotspot__body">{mesh.userData.infoBody}</div>
-        )}
-        {showTooltip && (
-          <div
-            className="tooltiptext"
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-          >
-            {renderTooltip()}
-          </div>
         )}
         {showTools && (
           <div
