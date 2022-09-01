@@ -73,7 +73,7 @@ const Tool = () => {
       const targetScene = obj.userData.targetScene;
       const execute = executable && Boolean(targetScene);
 
-      /** TODO: Needs to check in the DB if there is already a scene and if not the make a new one */
+      /** TODO: Please replace this implementation with the `ToursPublic` implementation */
       if (execute) createScene(targetScene);
     }
 

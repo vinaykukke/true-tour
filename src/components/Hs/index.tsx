@@ -26,6 +26,7 @@ interface IProps {
   scenes?: IUploadedImage[];
   publishedMode?: boolean;
   editMode?: boolean;
+  expand?: boolean;
 }
 
 interface IUploadedImage {
@@ -34,7 +35,7 @@ interface IUploadedImage {
 }
 
 const Hotspot = (props: IProps) => {
-  const { mesh, onMouseMove, tabIndex, onClick, publishedMode } = props;
+  const { mesh, onMouseMove, tabIndex, onClick, publishedMode, expand } = props;
   const {
     userData: { type },
     children,
@@ -49,7 +50,8 @@ const Hotspot = (props: IProps) => {
     type === "info" &&
     Boolean(mesh.userData?.infoTitle) &&
     Boolean(mesh.userData?.infoBody);
-  const expand = previewMode || publishedMode;
+  const expandWithMode = previewMode || publishedMode;
+  const shouldExpand = expand ? expand : expandWithMode;
 
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
@@ -160,7 +162,7 @@ const Hotspot = (props: IProps) => {
     <div className="hotspot__container">
       <div
         ref={hsRef}
-        data-expand={expand}
+        data-expand={shouldExpand}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
         onMouseMove={!mode ? onMouseMove : undefined}
@@ -171,7 +173,7 @@ const Hotspot = (props: IProps) => {
       >
         <div className="hotspot__title">
           {renderHotspots()}
-          {!expandInfoHotspot && expand && (
+          {!expandInfoHotspot && shouldExpand && (
             <div className="title">{mesh.userData.sceneName}</div>
           )}
           {expandInfoHotspot && (

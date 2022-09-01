@@ -45,6 +45,7 @@ const Tool = () => {
   const [hotspots, setHotspots] = useState<
     THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>[]
   >([]);
+  const [expand, setExpand] = useState("");
   const databaseRef = dbRef(
     db,
     `tours/sobha-developers/${params.id}/${params.tourId}`
@@ -76,7 +77,15 @@ const Tool = () => {
     if (obj.name === "mesh__hotspot") {
       const executable = obj.userData.executable;
       const targetSceneUrl = obj.userData.targetScene;
-      const execute = executable && Boolean(targetSceneUrl);
+      const expandForMobile = expand === obj.uuid;
+      const expandForDesktop = true;
+      const expandBasedOnDevice = isMobile.any()
+        ? expandForMobile
+        : expandForDesktop;
+      const execute =
+        expandBasedOnDevice && executable && Boolean(targetSceneUrl);
+
+      if (isMobile.any()) setExpand(obj.uuid);
 
       if (execute) {
         /** Always assuming that the taret scene has been added to the threejs scene */
@@ -91,6 +100,7 @@ const Tool = () => {
 
     /** Clear selectedObject once focus is shifted from hotspot */
     if (obj.name === "mesh__pano") {
+      setExpand("");
       /** Removes the focus of newly added hotspot */
       const hs = document.getElementsByClassName("hotspot__focus");
       for (let i = 0; i < hs.length; i++) {
@@ -210,6 +220,7 @@ const Tool = () => {
           key={i}
           tabIndex={i}
           publishedMode
+          expand={expand === hs.uuid}
         />
       ))}
     </Suspense>
