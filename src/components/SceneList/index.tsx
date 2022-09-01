@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { FullMetadata } from "firebase/storage";
 import { useThree, useUpdate } from "src/context/ThreejsContext";
-import "./styles.scss";
+import "./sceneList.styles.scss";
 
 interface IProps {
   scenes: IUploadedImage[];

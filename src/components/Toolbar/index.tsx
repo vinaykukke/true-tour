@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import {
   getDownloadURL,
@@ -188,8 +188,8 @@ const Toolbar = (props: IProps) => {
       const imageRef = ref(storage, fullPath);
       const uploadTask = uploadBytesResumable(imageRef, img, {
         customMetadata: {
-          name: img.name,
-          title: "Hotel",
+          name: img.name.replace(/\.[^/.]+$/, ""),
+          title: params.id.split("-").join(" "),
           firstUpload,
           id: id.toString(),
           uuid,
@@ -210,7 +210,7 @@ const Toolbar = (props: IProps) => {
         )
       );
       promises.push(promise);
-      dbPayload.push({ id: id.toString(), fullPath });
+      dbPayload.push({ id, fullPath });
     });
 
     const urls = await Promise.all(promises);
@@ -240,7 +240,7 @@ const Toolbar = (props: IProps) => {
     setOpen(true);
   };
 
-  const run = useCallback((dbScenes: IDBScene[], activeScene) => {
+  const run = () => {
     const existingScene = scene.children.find((sc: TPano) => {
       const currentActive =
         sc.userData.fullPath === activeScene.metaData.fullPath;
@@ -279,24 +279,26 @@ const Toolbar = (props: IProps) => {
 
         if (shouldAddHotspots) sc.hotspots.forEach(addHotspots(pano));
 
-        /** Add to scene */
-        scene.add(pano); // World Space
-
         if (currentlyActiveScene) {
           pano.userData.active = true;
           loader({ img: activeScene.url, mesh: pano });
           /** Move camera to the currently active scene */
           moveCamera(pano);
         }
+
+        /** Add to scene */
+        scene.add(pano); // World Space
       });
     }
-  }, []);
+  };
 
   /** Automatically set the 1st uploaded images to the currently active scene */
   useEffect(() => {
     const set = !activeScene && uploadedImages.length > 0;
     if (set) {
-      const sc = uploadedImages.at(0);
+      const sc = uploadedImages.find(
+        (img) => img.metaData.customMetadata.firstUpload === "1"
+      );
       setActiveScene(sc);
     }
   }, [activeScene, uploadedImages]);
@@ -328,21 +330,23 @@ const Toolbar = (props: IProps) => {
     if (activeScene) {
       /** Close image rack */
       if (showImageRack) toggle();
-      if (dbScenes.length > 0) run(dbScenes, activeScene);
+      run();
     }
   }, [activeScene, dbScenes]);
 
   useEffect(() => {
-    const fetch = async () => {
-      const res = await get(databaseRef);
+    if (uploadedImages.length > 0) {
+      const fetch = async () => {
+        const res = await get(databaseRef);
 
-      if (res.exists()) {
-        const scenesfromDB: IDBScene[] = res.val().scenes;
-        if (scenesfromDB) setDbScenes(scenesfromDB);
-      }
-    };
-    fetch();
-  }, []);
+        if (res.exists()) {
+          const scenesfromDB: IDBScene[] = res.val().scenes;
+          if (scenesfromDB) setDbScenes(scenesfromDB);
+        }
+      };
+      fetch();
+    }
+  }, [uploadedImages]);
 
   return (
     <Stack

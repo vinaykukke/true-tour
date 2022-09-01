@@ -23,6 +23,7 @@ import { IDBHotspot } from "src/types/hotspot";
 import { TPano } from "src/types/pano";
 import { IDBScene } from "src/types/scene";
 import { moveCamera } from "src/helpers/camera";
+import { isMobile } from "src/helpers/isMobile";
 import { handleZoom, resizeRendererToDisplaySize } from "src/helpers/tool";
 import Hotspot from "src/components/Hotspot";
 import { DEFAULT_DATA } from "src/data";
@@ -30,6 +31,10 @@ import "./tools.styles.scss";
 
 /** User Interaction */
 let isUserInteracting = false;
+
+/** User Interaction Event*/
+const mouseMoveEndEvent = new Event("mouseMoveEnd");
+let timeout: NodeJS.Timeout = null;
 
 /** Vectors for mouse events */
 const clickMouse = new THREE.Vector2();
@@ -78,6 +83,9 @@ const Tool = () => {
         const uuid = obj.userData.sceneId;
         const targetScene = getTargetScene(uuid);
         moveCamera(targetScene);
+
+        /** Re-Enable controls if tour is being viewed on a recognized mobile device */
+        if (isMobile.any()) controls.enable();
       }
     }
 
@@ -112,6 +120,19 @@ const Tool = () => {
 
     if (isUserInteracting) requestAnimationFrame(animate);
   }, []);
+
+  const handleMouseMove = () => {
+    if (!isUserInteracting) {
+      isUserInteracting = true;
+      animate();
+    }
+
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(
+      () => rootRef.current?.dispatchEvent(mouseMoveEndEvent),
+      1000 * 10
+    );
+  };
 
   const addHotspots = (pano: TPano) => (hspt: IDBHotspot) => {
     const hs = Hotspot({ type: hspt.userData.type });
@@ -180,6 +201,7 @@ const Tool = () => {
         id="three-js__root"
         onClick={handleClick}
         onWheel={handleZoom}
+        onPointerMove={handleMouseMove}
       />
       {hotspots.map((hs, i) => (
         <Hs

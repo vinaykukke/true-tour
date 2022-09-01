@@ -107,8 +107,8 @@
   .tooltiptext,
   .hotspot__edit_tooltiptext {
     visibility: hidden;
-    min-width: 196px;
-    max-width: 300px;
+    min-width: 300px;
+    max-width: 500px;
     background-color: white;
     color: #000;
     text-align: center;
@@ -120,6 +120,10 @@
     /* Position the tooltip text */
     position: absolute;
     z-index: 10;
+
+    .MuiFormControl-root {
+      width: 100% !important;
+    }
 
     &[data-type="info"] {
       width: 300px;
