@@ -10,6 +10,7 @@ export const useUpdate = () => useContext(ThreejsUpdateContext);
 const ThreejsProvider = ({ children }) => {
   const [selectedObj, setSelectedObj] = useState(null);
   const [previewMode, togglePreviewMode] = useState(false);
+  const [executeOnMobile, setExecuteOnmobile] = useState(false);
   const [infoTitle, setInfoTitle] = useState("");
   const [infoBody, setInfoBody] = useState("");
   const [targetScene, setTargetScene] = useState("");
@@ -31,6 +32,7 @@ const ThreejsProvider = ({ children }) => {
     type,
     previewMode,
     activeScene,
+    executeOnMobile,
   };
 
   const threeUpdate = {
@@ -41,6 +43,7 @@ const ThreejsProvider = ({ children }) => {
     setTargetScene,
     togglePreviewMode,
     setActiveScene,
+    setExecuteOnmobile,
   };
 
   return (

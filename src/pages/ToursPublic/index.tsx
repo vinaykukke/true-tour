@@ -17,13 +17,12 @@ import {
 import { ref as dbRef, get } from "firebase/database";
 import { db, storage } from "src/firebase";
 import setup from "src/three-js/setup";
+import { useUpdate } from "src/context/ThreejsContext";
 import Pano, { loader } from "src/components/Pano";
 import Hs from "src/components/Hs";
 import { IDBHotspot } from "src/types/hotspot";
 import { TPano } from "src/types/pano";
 import { IDBScene } from "src/types/scene";
-import { moveCamera } from "src/helpers/camera";
-import { isMobile } from "src/helpers/isMobile";
 import { handleZoom, resizeRendererToDisplaySize } from "src/helpers/tool";
 import Hotspot from "src/components/Hotspot";
 import { DEFAULT_DATA } from "src/data";
@@ -36,84 +35,22 @@ let isUserInteracting = false;
 const mouseMoveEndEvent = new Event("mouseMoveEnd");
 let timeout: NodeJS.Timeout = null;
 
-/** Vectors for mouse events */
-const clickMouse = new THREE.Vector2();
-const raycaster = new THREE.Raycaster();
-
 const Tool = () => {
   const params = useParams();
+  const { setExecuteOnmobile } = useUpdate();
   const [hotspots, setHotspots] = useState<
     THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>[]
   >([]);
-  const [expand, setExpand] = useState("");
   const databaseRef = dbRef(
     db,
     `tours/sobha-developers/${params.id}/${params.tourId}`
   );
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    /** Bounding rect for the canvas */
-    const rect = renderer.domElement.getBoundingClientRect();
-
-    /** Offset values for the canvas */
-    const x = (event.clientX - rect.left) / renderer.domElement.clientWidth;
-    const y = (event.clientY - rect.top) / renderer.domElement.clientHeight;
-
-    /** calculate pointer position in normalized device coordinates (-1 to +1) */
-    clickMouse.x = x * 2 - 1;
-    clickMouse.y = -y * 2 + 1;
-
-    /** Set the camera from which the ray should orginate and to what coordinates it should go to */
-    raycaster.setFromCamera(clickMouse, camera);
-
-    /**
-     * Calculate objects intersecting the picking ray.
-     * The array is sorted. Meaning that closest intersecting object is at position 0.
-     */
-    const found = raycaster.intersectObjects<TPano>(scene.children);
-    const obj = found.length > 0 && found[0].object;
-
-    if (obj.name === "mesh__hotspot") {
-      const executable = obj.userData.executable;
-      const targetSceneUrl = obj.userData.targetScene;
-      const expandForMobile = expand === obj.uuid;
-      const expandForDesktop = true;
-      const expandBasedOnDevice = isMobile.any()
-        ? expandForMobile
-        : expandForDesktop;
-      const execute =
-        expandBasedOnDevice && executable && Boolean(targetSceneUrl);
-
-      if (isMobile.any()) setExpand(obj.uuid);
-
-      if (execute) {
-        /** Always assuming that the taret scene has been added to the threejs scene */
-        const uuid = obj.userData.sceneId;
-        const targetScene = getTargetScene(uuid);
-        moveCamera(targetScene);
-
-        /** Re-Enable controls if tour is being viewed on a recognized mobile device */
-        if (isMobile.any()) controls.enable();
-      }
-    }
-
-    /** Clear selectedObject once focus is shifted from hotspot */
-    if (obj.name === "mesh__pano") {
-      setExpand("");
-      /** Removes the focus of newly added hotspot */
-      const hs = document.getElementsByClassName("hotspot__focus");
-      for (let i = 0; i < hs.length; i++) {
-        const element = hs[i];
-        element.classList.remove("hotspot__focus");
-      }
-    }
+  const handlePointerOver = () => {
+    if (!controls.enabled) controls.enable();
+    setExecuteOnmobile(false);
   };
-
-  const getTargetScene = useCallback(
-    (id: string) => scene.children.find((sc) => sc.userData.sceneId === id),
-    []
-  );
 
   const animate = useCallback(() => {
     if (resizeRendererToDisplaySize(rootRef.current)) {
@@ -209,19 +146,12 @@ const Tool = () => {
       <div
         ref={rootRef}
         id="three-js__root"
-        onClick={handleClick}
         onWheel={handleZoom}
         onPointerMove={handleMouseMove}
+        onPointerOver={handlePointerOver}
       />
       {hotspots.map((hs, i) => (
-        <Hs
-          onClick={handleClick}
-          mesh={hs}
-          key={i}
-          tabIndex={i}
-          publishedMode
-          expand={expand === hs.uuid}
-        />
+        <Hs mesh={hs} key={i} tabIndex={i} publishedMode />
       ))}
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { Mesh } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { FullMetadata } from "firebase/storage";
@@ -15,18 +15,19 @@ import {
 import { useThree, useUpdate } from "src/context/ThreejsContext";
 import SceneList from "src/components/SceneList";
 import InfoEdit from "src/components/InfoEdit";
+import { isMobile } from "src/helpers/isMobile";
+import { moveCamera } from "src/helpers/camera";
 import "./hotspot.styles.scss";
 
 interface IProps {
   onMouseMove?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   mesh: Mesh;
   tabIndex: number;
   deleteHotspot?: () => void;
   scenes?: IUploadedImage[];
   publishedMode?: boolean;
   editMode?: boolean;
-  expand?: boolean;
 }
 
 interface IUploadedImage {
@@ -35,14 +36,23 @@ interface IUploadedImage {
 }
 
 const Hotspot = (props: IProps) => {
-  const { mesh, onMouseMove, tabIndex, onClick, publishedMode, expand } = props;
+  const { mesh, onMouseMove, tabIndex, publishedMode } = props;
   const {
-    userData: { type },
+    userData: {
+      type,
+      sceneName,
+      infoBody,
+      infoTitle,
+      executable,
+      targetScene,
+      sceneId,
+    },
     children,
   } = mesh;
   const hsRef = useRef(null);
-  const { selectedObj, previewMode } = useThree();
-  const { setSelectedObj } = useUpdate();
+  const { selectedObj, previewMode, executeOnMobile } = useThree();
+  const { setSelectedObj, setExecuteOnmobile } = useUpdate();
+  const editMode = !publishedMode && !previewMode;
   const mode = publishedMode ? publishedMode : previewMode;
   const showTools = !mode && Boolean(selectedObj) && mesh.id === selectedObj.id;
   const expandInfoHotspot =
@@ -50,8 +60,8 @@ const Hotspot = (props: IProps) => {
     type === "info" &&
     Boolean(mesh.userData?.infoTitle) &&
     Boolean(mesh.userData?.infoBody);
-  const expandWithMode = previewMode || publishedMode;
-  const shouldExpand = expand ? expand : expandWithMode;
+  const expandOnDesktop = previewMode || publishedMode;
+  const shouldExpand = executeOnMobile ? executeOnMobile : expandOnDesktop;
 
   const handleMouseOver = () => controls.disable();
   const handleMouseOut = () => controls.enable();
@@ -93,35 +103,35 @@ const Hotspot = (props: IProps) => {
   }, [mode, setSelectedObj]);
 
   const renderHotspots = () => {
-    let img = null;
+    let icon = null;
 
     switch (type) {
       case "down":
-        img = <FontAwesomeIcon className="icons" icon={faArrowDown} />;
+        icon = faArrowDown;
         break;
 
       case "left":
-        img = <FontAwesomeIcon className="icons" icon={faArrowLeft} />;
+        icon = faArrowLeft;
         break;
 
       case "right":
-        img = <FontAwesomeIcon className="icons" icon={faArrowRight} />;
+        icon = faArrowRight;
         break;
 
       case "up":
-        img = <FontAwesomeIcon className="icons" icon={faArrowUp} />;
+        icon = faArrowUp;
         break;
 
       case "info":
-        img = <FontAwesomeIcon className="icons" icon={faInfo} />;
+        icon = faInfo;
         break;
 
       default:
-        img = <FontAwesomeIcon className="icons" icon={faArrowRight} />;
+        icon = faArrowRight;
         break;
     }
 
-    return img;
+    return <FontAwesomeIcon className="icons" icon={icon} />;
   };
 
   const renderEditTooltip = () => {
@@ -147,6 +157,38 @@ const Hotspot = (props: IProps) => {
     return Tooltip;
   };
 
+  const execute = (uuid: string) => {
+    const targetSceneUrl = targetScene;
+    const shouldExecute = uuid === mesh.uuid;
+    const execute = shouldExecute && executable && Boolean(targetSceneUrl);
+
+    if (execute) {
+      /** Always assuming that the taret scene has been added to the threejs scene */
+      const uuid = sceneId;
+      const targetScene = getTargetScene(uuid);
+      moveCamera(targetScene);
+      setExecuteOnmobile(false);
+      /** Re-Enable controls if tour is being viewed on a recognized mobile device */
+      if (isMobile.any()) controls.enable();
+    }
+  };
+
+  const getTargetScene = useCallback(
+    (id: string) => scene.children.find((sc) => sc.userData.sceneId === id),
+    []
+  );
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const mobile = isMobile.any();
+    const uuid = e.currentTarget.dataset.uuid;
+
+    if (mobile) setExecuteOnmobile(true);
+    if (publishedMode || previewMode) {
+      if (mobile && executeOnMobile) execute(uuid);
+      if (!mobile) execute(uuid);
+    }
+  };
+
   /**
    * The className"hotspot__container" => root element for react to remove when hotspot is deleted.
    * If you remove this container - react will throw the following Exception:
@@ -163,10 +205,11 @@ const Hotspot = (props: IProps) => {
       <div
         ref={hsRef}
         data-expand={shouldExpand}
+        data-uuid={mesh.uuid}
         className="hotspot hotspot__focus"
         id={`hotspot__${mesh.uuid}`}
-        onMouseMove={!mode ? onMouseMove : undefined}
-        onClick={mode ? onClick : undefined}
+        onMouseMove={!previewMode ? onMouseMove : undefined}
+        onClick={!editMode ? handleClick : undefined}
         tabIndex={tabIndex}
         onMouseOver={mode ? handleMouseOver : undefined}
         onMouseOut={mode ? handleMouseOut : undefined}
@@ -174,15 +217,13 @@ const Hotspot = (props: IProps) => {
         <div className="hotspot__title">
           {renderHotspots()}
           {!expandInfoHotspot && shouldExpand && (
-            <div className="title">{mesh.userData.sceneName}</div>
+            <div className="title">
+              {sceneName ? sceneName : "No Target Selected"}
+            </div>
           )}
-          {expandInfoHotspot && (
-            <div className="title">{mesh.userData.infoTitle}</div>
-          )}
+          {expandInfoHotspot && <div className="title">{infoTitle}</div>}
         </div>
-        {expandInfoHotspot && (
-          <div className="hotspot__body">{mesh.userData.infoBody}</div>
-        )}
+        {expandInfoHotspot && <div className="hotspot__body">{infoBody}</div>}
         {showTools && (
           <div
             className="hotspot__edit_tools"
