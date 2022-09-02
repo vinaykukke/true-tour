@@ -4,11 +4,7 @@ import setup from "src/three-js/setup";
 import { TPano } from "src/types/pano";
 import Toolbar from "src/components/Toolbar";
 import { useUpdate, useThree } from "src/context/ThreejsContext";
-import {
-  createScene,
-  handleZoom,
-  resizeRendererToDisplaySize,
-} from "src/helpers/tool";
+import { handleZoom, resizeRendererToDisplaySize } from "src/helpers/tool";
 import "./tools.styles.scss";
 
 /** User Interaction */
@@ -66,15 +62,6 @@ const Tool = () => {
     if (!previewMode && obj.userData.draggable) {
       if (doubleClick) draggableObject = obj;
       setSelectedObj(obj);
-    }
-
-    if (previewMode && obj.name === "mesh__hotspot") {
-      const executable = obj.userData.executable;
-      const targetScene = obj.userData.targetScene;
-      const execute = executable && Boolean(targetScene);
-
-      /** TODO: Please replace this implementation with the `ToursPublic` implementation */
-      if (execute) createScene(targetScene);
     }
 
     /** Clear selectedObject once focus is shifted from hotspot */
@@ -191,7 +178,7 @@ const Tool = () => {
           Please upload an image to get started.
         </div>
       )}
-      <Toolbar onMouseMove={handleMouseMove} onClick={handleClick} />
+      <Toolbar onMouseMove={handleMouseMove} />
     </Suspense>
   );
 };

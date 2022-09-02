@@ -50,7 +50,6 @@ import "./toolbar.styles.scss";
 
 interface IProps {
   onMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 interface IUploadedImage {
@@ -416,7 +415,6 @@ const Toolbar = (props: IProps) => {
       {hotspots.map((hs, i) => (
         <Hs
           onMouseMove={props.onMouseMove}
-          onClick={props.onClick}
           deleteHotspot={deleteHotspot}
           mesh={hs}
           key={i}
