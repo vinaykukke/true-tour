@@ -217,8 +217,11 @@ const Hotspot = (props: IProps) => {
         <div className="hotspot__title">
           {renderHotspots()}
           {!expandInfoHotspot && shouldExpand && (
-            <div className="title">
-              {sceneName ? sceneName : "No Target Selected"}
+            <div>
+              <div className="title__sign_post">Way to the</div>
+              <div className="title">
+                {sceneName ? sceneName : "No Target Selected"}
+              </div>
             </div>
           )}
           {expandInfoHotspot && <div className="title">{infoTitle}</div>}

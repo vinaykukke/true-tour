@@ -25,6 +25,11 @@
       border-radius: 5px;
 
       .hotspot__title {
+        .title__sign_post {
+          font-size: 10px;
+          text-align: center;
+        }
+
         .title {
           visibility: visible;
           font-size: 20px;
@@ -71,10 +76,15 @@
     align-items: center;
     width: 100%;
 
+    .title__sign_post {
+      font-size: 0px;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+
     .title {
       visibility: hidden;
       width: 100%;
-      margin: 0 15px;
       font-size: 0px;
       text-align: center;
       white-space: nowrap;
